@@ -40,7 +40,6 @@ public class MultiTreeMapTest {
         }
     }
 
-/*
     private static class AscendingPlusAge implements Comparator<T> {
         @Override
         public int compare(T o1, T o2) {
@@ -112,6 +111,5 @@ public class MultiTreeMapTest {
         }
         assertEquals("all elements iterated", array.length, i);
     }
-    */
 }
 
