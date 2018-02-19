@@ -22,7 +22,7 @@ public class Demo {
 		sec.addKeyComment("age", "A comment just before age");
 		sec.addKeyComment("age", "Yet another comment just before age");
 
-		ini.addsection(sec);
+		ini.addSection(sec);
 
 		sec = new IniSection("report_2");
 		sec.setValue("name", "Home");
@@ -31,7 +31,7 @@ public class Demo {
 		sec.addKeyComment("age", "A comment just before age");
 		sec.addKeyComment("name", "A comment before name");
 
-		ini.addsection(sec);
+		ini.addSection(sec);
 
 		File file = new File("resources/output/output.ini");
 		OutputStream s = new FileOutputStream(file);

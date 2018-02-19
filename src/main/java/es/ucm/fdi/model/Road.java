@@ -2,11 +2,24 @@ package es.ucm.fdi.model;
 
 import es.ucm.fdi.util.MultiTreeMap;
 
-public class Road {
+import java.util.Comparator;
+
+public class Road extends SimulatedObject {
+
+    private static String SECTION_TAG_NAME = "road_report";
 
 	private int length;
 	private int maxSpeed;
 	private MultiTreeMap<Integer, Vehicle> vehicleList;
+	// variable usada para advance
+    private boolean brokenDownVehicles;
+
+	public Road(String id, int length, int maxSpeed) {
+	    super(id);
+	    this.length = length;
+	    this.maxSpeed = maxSpeed;
+	    vehicleList = new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
+    }
 	
 	public int getLength() {
 		return length;
@@ -21,21 +34,34 @@ public class Road {
 		int location = vehicle.getLocation();
 		vehicleList.removeValue(location, vehicle);
 	}
-	
+
+	@Override
 	public void advance() {
+        final int baseSpeed = (int)Math.min(maxSpeed, maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
+	    brokenDownVehicles = false;
 		vehicleList.innerValues().forEach(v -> {
-			int baseSpeed = (int)Math.min(
-					maxSpeed,
-					maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-			// TODO: calcular factor de reducción (obstáculos ? 1 : 2)
-			int reductionFactor = 1;
-			v.setCurrentSpeed(baseSpeed / reductionFactor);
-			v.advance();
+            int reductionFactor = brokenDownVehicles ? 2 : 1;
+            brokenDownVehicles = brokenDownVehicles || v.getBreakdownTime() > 0;
+            v.setCurrentSpeed(baseSpeed / reductionFactor);
+            v.advance();
 		});
 	}
-	
-	public String generateReport() {
-		throw new UnsupportedOperationException("Not implemented yet");
-	}
-	
+
+	@Override
+    public String generateReport(int time) {
+	    StringBuffer stringBuffer = new StringBuffer();
+	    stringBuffer.append(super.generateReport(time) + "\n");
+	    stringBuffer.append("state = ");
+	    vehicleList.innerValues().forEach(v -> stringBuffer.append("(" + v.id + "," + v.getLocation() + "),"));
+	    if (!vehicleList.isEmpty()) {
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        }
+	    return stringBuffer.toString();
+    }
+
+	@Override
+    public String getSectionTagName() {
+	    return SECTION_TAG_NAME;
+    }
+
 }
