@@ -10,14 +10,6 @@ public abstract class SimulatedObject {
 
     public abstract void advance();
 
-    public abstract String getSectionTagName();
-
-    public String generateReport(int time) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("[" + getSectionTagName() + "]\n");
-        stringBuffer.append("id = " + id + "\n");
-        stringBuffer.append("time = " + time);
-        return stringBuffer.toString();
-    }
+    public abstract String generateReport(int time);
 
 }

@@ -1,16 +1,14 @@
 package es.ucm.fdi.model;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 
-public class Vehicle {
+public class Vehicle extends SimulatedObject {
 
-	private String id;
+    private static final String SECTION_TAG_NAME = "vehicle_report";
+
 	private int maxSpeed;
 	private int currentSpeed;
 	private Road road;
@@ -21,11 +19,16 @@ public class Vehicle {
 	private int kilometrage;
 
 	public Vehicle(String id, int maxSpeed, Road road) {
-		this.id = id;
+		super(id);
 		this.maxSpeed = maxSpeed;
 		this.road = road;
 	}
 
+	public int getBreakdownTime() {
+		return breakdownTime;
+	}
+
+	@Override
 	public void advance() {
 		if (breakdownTime > 0) {
 			breakdownTime--;
@@ -41,7 +44,8 @@ public class Vehicle {
 		if (road != null) {
 			road.vehicleOut(this);
 		}
-		Road newRoad = hasArrived ? null : new Road();
+        // TODO: probablemente no sea new Road(); esto está para que compile
+		Road newRoad = hasArrived ? null : new Road("id", 0, 0);
 		if (newRoad == null) {
 			hasArrived = true;
 		} else {
@@ -62,14 +66,14 @@ public class Vehicle {
 		this.currentSpeed = Math.min(currentSpeed, maxSpeed);
 	}
 
-	public String generateReport() {
+	@Override
+	public String generateReport(int time) {
 
 		Ini ini = new Ini();
-		IniSection sec;
+		IniSection sec = new IniSection(SECTION_TAG_NAME);
 
-		sec = new IniSection("vehicle_report");
 		sec.setValue("id", id);
-		sec.setValue("time", 0);
+		sec.setValue("time", time);
 		sec.setValue("speed", currentSpeed);
 		sec.setValue("kilometrage", kilometrage);
 		sec.setValue("faulty", breakdownTime);
@@ -77,7 +81,7 @@ public class Vehicle {
 				+ "," + location + ")";
 		sec.setValue("location", loc);
 
-		ini.addsection(sec);
+		ini.addSection(sec);
 
 		return ini.toString();
 	}
