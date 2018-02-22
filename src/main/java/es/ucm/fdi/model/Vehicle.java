@@ -1,89 +1,94 @@
 package es.ucm.fdi.model;
 
-import java.util.List;
-
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 
+import java.util.List;
+
 public class Vehicle extends SimulatedObject {
 
-    private static final String SECTION_TAG_NAME = "vehicle_report";
+  private static final String SECTION_TAG_NAME = "vehicle_report";
 
-	private int maxSpeed;
-	private int currentSpeed;
-	private Road road;
-	private int location;
-	private List<Junction> itinerary;
-	private int breakdownTime;
-	private boolean hasArrived;
-	private int kilometrage;
+  private int maxSpeed;
+  private int currentSpeed;
+  private Road road;
+  private int location;
+  private List<Junction> itinerary;
+  private int breakdownTime;
+  private boolean hasArrived;
+  private int kilometrage;
 
-	public Vehicle(String id, int maxSpeed, Road road) {
-		super(id);
-		this.maxSpeed = maxSpeed;
-		this.road = road;
-	}
+  public Vehicle(String id, int maxSpeed, Road road) {
+    super(id);
+    this.maxSpeed = maxSpeed;
+    this.road = road;
+  }
 
-	public int getBreakdownTime() {
-		return breakdownTime;
-	}
+  public Road getRoad() {
+    return road;
+  }
 
-	@Override
-	public void advance() {
-		if (breakdownTime > 0) {
-			breakdownTime--;
-		} else {
-			int newLocation = location + currentSpeed;
-			location = (newLocation >= road.getLength()) ? road.getLength()
-					: newLocation;
-			kilometrage += currentSpeed;
-		}
-	}
+  public int getBreakdownTime() {
+    return breakdownTime;
+  }
 
-	public void moveToNextRoad() {
-		if (road != null) {
-			road.vehicleOut(this);
-		}
-        // TODO: probablemente no sea new Road(); esto está para que compile
-		Road newRoad = hasArrived ? null : new Road("id", 0, 0);
-		if (newRoad == null) {
-			hasArrived = true;
-		} else {
-			road = newRoad;
-			road.vehicleIn(this);
-		}
-	}
+  public void setBreakdownTime(int breakdownTime) {
+    this.breakdownTime += breakdownTime;
+  }
 
-	public void setBreakdownTime(int breakdownTime) {
-		this.breakdownTime += breakdownTime;
-	}
+  @Override
+  public void advance() {
+    if (breakdownTime > 0) {
+      breakdownTime--;
+    } else {
+      int newLocation = location + currentSpeed;
+      location = (newLocation >= road.getLength()) ? road.getLength()
+          : newLocation;
+      kilometrage += currentSpeed;
+    }
+  }
 
-	public int getLocation() {
-		return location;
-	}
+  public boolean moveToNextRoad() {
+    if (road != null) {
+      road.vehicleOut(this);
+    }
+    // TODO: probablemente no sea new Road(); esto está para que compile
+    Road newRoad = hasArrived ? null : new Road("id", 0, 0);
+    if (newRoad == null) {
+      hasArrived = true;
+    } else {
+      road = newRoad;
+      road.vehicleIn(this);
+    }
+    return true;
+  }
 
-	public void setCurrentSpeed(int currentSpeed) {
-		this.currentSpeed = Math.min(currentSpeed, maxSpeed);
-	}
+  public int getLocation() {
+    return location;
+  }
 
-	@Override
-	public String generateReport(int time) {
+  public void setCurrentSpeed(int currentSpeed) {
+    this.currentSpeed = Math.min(currentSpeed, maxSpeed);
+  }
 
-		Ini ini = new Ini();
-		IniSection sec = new IniSection(SECTION_TAG_NAME);
+  @Override
+  public String generateReport(int time) {
 
-		sec.setValue("id", id);
-		sec.setValue("time", time);
-		sec.setValue("speed", currentSpeed);
-		sec.setValue("kilometrage", kilometrage);
-		sec.setValue("faulty", breakdownTime);
-		String loc = (location == road.getLength()) ? "arrived" : "(" + road.id
-				+ "," + location + ")";
-		sec.setValue("location", loc);
+    Ini ini = new Ini();
+    IniSection sec = new IniSection(SECTION_TAG_NAME);
 
-		ini.addSection(sec);
+    sec.setValue("id", id);
+    sec.setValue("time", time);
+    sec.setValue("speed", currentSpeed);
+    sec.setValue("kilometrage", kilometrage);
+    sec.setValue("faulty", breakdownTime);
+    String loc = (location == road.getLength()) ? "arrived" : "(" + road.id
+        + "," + location + ")";
+    sec.setValue("location", loc);
 
-		return ini.toString();
-	}
-	
+    ini.addSection(sec);
+
+    return ini.toString();
+  }
+
 }
