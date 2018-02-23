@@ -1,5 +1,7 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
+
 public abstract class SimulatedObject {
 
   protected final String id; // id único
@@ -10,7 +12,16 @@ public abstract class SimulatedObject {
 
   public abstract void advance();
 
-  public abstract String generateReport(int time);
+  public abstract void fillReportDetails(int time, Map<String, String> kvps);
+
+  protected abstract String getReportHeader();
+
+  public void generateReport(int time, Map<String, String> kvps) {
+    kvps.put("header", getReportHeader());
+    kvps.put("id", id);
+    kvps.put("time", String.valueOf(time));
+    fillReportDetails(time, kvps);
+  }
 
   @Override
   public boolean equals(Object o) {

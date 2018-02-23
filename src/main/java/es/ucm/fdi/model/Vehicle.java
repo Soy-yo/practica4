@@ -1,9 +1,7 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.ini.IniSection;
-
 import java.util.List;
+import java.util.Map;
 
 public class Vehicle extends SimulatedObject {
 
@@ -71,6 +69,7 @@ public class Vehicle extends SimulatedObject {
     this.currentSpeed = Math.min(currentSpeed, maxSpeed);
   }
 
+  /*
   @Override
   public String generateReport(int time) {
 
@@ -89,6 +88,18 @@ public class Vehicle extends SimulatedObject {
     ini.addSection(sec);
 
     return ini.toString();
+  }
+  */
+
+  @Override
+  public void fillReportDetails(int time, Map<String, String> kvps) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+
+  @Override
+  protected String getReportHeader() {
+    return SECTION_TAG_NAME;
   }
 
 }

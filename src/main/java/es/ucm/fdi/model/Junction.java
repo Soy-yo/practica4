@@ -1,8 +1,5 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.ini.IniSection;
-
 import java.util.*;
 
 public class Junction extends SimulatedObject {
@@ -43,14 +40,7 @@ public class Junction extends SimulatedObject {
   }
 
   @Override
-  public String generateReport(int time) {
-
-    Ini ini = new Ini();
-    IniSection sec = new IniSection(SECTION_TAG_NAME);
-
-    sec.setValue("id", id);
-    sec.setValue("time", time);
-
+  public void fillReportDetails(int time, Map<String, String> kvps) {
     StringBuilder stringBuilder = new StringBuilder();
     for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
       stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");
@@ -62,11 +52,12 @@ public class Junction extends SimulatedObject {
       }
       stringBuilder.append("]),");
     }
-    sec.setValue("queues", stringBuilder.deleteCharAt(stringBuilder.length() - 1).toString());
+    kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
+  }
 
-    ini.addSection(sec);
-
-    return ini.toString();
+  @Override
+  protected String getReportHeader() {
+    return SECTION_TAG_NAME;
   }
 
   private String lightColor(Road road) {

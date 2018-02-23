@@ -1,10 +1,9 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.util.MultiTreeMap;
 
 import java.util.Comparator;
+import java.util.Map;
 
 public class Road extends SimulatedObject {
 
@@ -50,24 +49,15 @@ public class Road extends SimulatedObject {
   }
 
   @Override
-  public String generateReport(int time) {
+  public void fillReportDetails(int time, Map<String, String> kvps) {
+    StringBuilder stringBuilder = new StringBuilder();
+    vehicleList.innerValues().forEach(v -> stringBuilder.append("(" + v.id + "," + v.getLocation() + "),"));
+    kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
+  }
 
-    Ini ini = new Ini();
-    IniSection sec = new IniSection(SECTION_TAG_NAME);
-
-    sec.setValue("id", id);
-    sec.setValue("time", time);
-    if (!vehicleList.isEmpty()) {
-      StringBuilder stringBuilder = new StringBuilder();
-      vehicleList.innerValues().forEach(v -> stringBuilder.append("(" + v.id + "," + v.getLocation() + "),"));
-      sec.setValue("state", stringBuilder.deleteCharAt(stringBuilder.length() - 1).toString());
-    } else {
-      sec.setValue("state", "");
-    }
-
-    ini.addSection(sec);
-
-    return ini.toString();
+  @Override
+  protected String getReportHeader() {
+    return SECTION_TAG_NAME;
   }
 
 }
