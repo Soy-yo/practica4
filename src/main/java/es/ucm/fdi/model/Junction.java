@@ -20,7 +20,7 @@ public class Junction extends SimulatedObject {
   }
 
   public void vehicleIn(Vehicle vehicle) {
-    enteringRoads.get(vehicle.getRoad()).offer(vehicle);
+    enteringRoads.get(vehicle.getRoad()).add(vehicle);
   }
 
   @Override

@@ -5,64 +5,69 @@ import java.util.Map;
 
 public class Vehicle extends SimulatedObject {
 
-    private static final String SECTION_TAG_NAME = "vehicle_report";
+  private static final String SECTION_TAG_NAME = "vehicle_report";
 
-	private int maxSpeed;
-	private int currentSpeed;
-	private Road road;
-	private int location;
-	private List<Junction> itinerary;
-	private int breakdownTime;
-	private boolean hasArrived;
-	private int kilometrage;
+  private int maxSpeed;
+  private int currentSpeed;
+  private Road road;
+  private int location;
+  private List<Junction> itinerary;
+  private int breakdownTime;
+  private boolean hasArrived;
+  private int kilometrage;
 
-	public Vehicle(String id, int maxSpeed, Road road) {
-		super(id);
-		this.maxSpeed = maxSpeed;
-		this.road = road;
-	}
+  public Vehicle(String id, int maxSpeed, Road road) {
+    super(id);
+    this.maxSpeed = maxSpeed;
+    this.road = road;
+  }
 
-	public int getBreakdownTime() {
-		return breakdownTime;
-	}
+  public Road getRoad() {
+    return road;
+  }
 
-	@Override
-	public void advance() {
-		if (breakdownTime > 0) {
-			breakdownTime--;
-		} else {
-			int newLocation = location + currentSpeed;
-			location = (newLocation >= road.getLength()) ? road.getLength()
-					: newLocation;
-			kilometrage += currentSpeed;
-		}
-	}
+  public int getBreakdownTime() {
+    return breakdownTime;
+  }
 
-	public void moveToNextRoad() {
-		if (road != null) {
-			road.vehicleOut(this);
-		}
-        // TODO: probablemente no sea new Road(); esto está para que compile
-		Road newRoad = hasArrived ? null : new Road("id", 0, 0);
-		if (newRoad == null) {
-			hasArrived = true;
-		} else {
-			road = newRoad;
-			road.vehicleIn(this);
-		}
-	}
+  public void setBreakdownTime(int breakdownTime) {
+    this.breakdownTime += breakdownTime;
+  }
 
-	public void setBreakdownTime(int breakdownTime) {
-		this.breakdownTime += breakdownTime;
-	}
+  @Override
+  public void advance() {
+    if (breakdownTime > 0) {
+      breakdownTime--;
+    } else {
+      int newLocation = location + currentSpeed;
+      location = (newLocation >= road.getLength()) ? road.getLength()
+          : newLocation;
+      kilometrage += currentSpeed;
+    }
+  }
 
-	public int getLocation() {
-		return location;
-	}
+  public boolean moveToNextRoad() {
+    if (road != null) {
+      road.vehicleOut(this);
+    }
+    // TODO: probablemente no sea new Road(); esto está para que compile
+    Road newRoad = hasArrived ? null : new Road("id", 0, 0);
+    if (newRoad == null) {
+      hasArrived = true;
+    } else {
+      road = newRoad;
+      road.vehicleIn(this);
+    }
+    return true;
+  }
 
-	public void setCurrentSpeed(int currentSpeed) {
-		this.currentSpeed = Math.min(currentSpeed, maxSpeed);
-	}
+  public int getLocation() {
+    return location;
+  }
+
+  public void setCurrentSpeed(int currentSpeed) {
+    this.currentSpeed = Math.min(currentSpeed, maxSpeed);
+  }
 
   @Override
   public void fillReportDetails(int time, Map<String, String> kvps) {
@@ -95,5 +100,5 @@ public class Vehicle extends SimulatedObject {
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
   }
-	
+
 }
