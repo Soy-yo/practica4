@@ -4,7 +4,8 @@ import es.ucm.fdi.ini.IniSection;
 
 public interface EventBuilder {
 
-  Event parse(IniSection section);
+  // TODO: revisar throws
+  Event parse(IniSection section) throws IllegalArgumentException;
 
   // TODO: comprobar corrección de id
   default boolean isValid(String id) {

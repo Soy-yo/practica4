@@ -34,9 +34,11 @@ public class Junction extends SimulatedObject {
     Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
     if (!vehicleList.isEmpty()) {
       Vehicle vehicle = vehicleList.peek();
-      if (vehicle.moveToNextRoad()) {
+      //TODO: comento el if para que compile
+      //if (vehicle.moveToNextRoad()) {
+      	vehicle.moveToNextRoad();
         vehicleList.poll();
-      }
+      //}
     }
   }
 
@@ -64,3 +66,4 @@ public class Junction extends SimulatedObject {
   private String lightColor(Road road) {
     return road.equals(currentRoadOn) ? "green" : "red";
   }
+}

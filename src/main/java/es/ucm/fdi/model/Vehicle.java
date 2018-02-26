@@ -65,7 +65,11 @@ public class Vehicle extends SimulatedObject {
   public int getLocation() {
     return location;
   }
-
+  
+  public Road getRoad() {
+		return road;
+	}
+  
   public void setCurrentSpeed(int currentSpeed) {
     this.currentSpeed = Math.min(currentSpeed, maxSpeed);
   }
