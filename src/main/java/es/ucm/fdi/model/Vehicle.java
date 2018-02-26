@@ -1,6 +1,6 @@
 package es.ucm.fdi.model;
 
-import java.util.List;
+import java.util.Queue;
 
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
@@ -13,7 +13,7 @@ public class Vehicle extends SimulatedObject {
 	private int currentSpeed;
 	private Road road;
 	private int location;
-	private List<Junction> itinerary;
+	private Queue<Junction> itinerary;
 	private int breakdownTime;
 	private boolean hasArrived;
 	private int kilometrage;
@@ -34,9 +34,13 @@ public class Vehicle extends SimulatedObject {
 			breakdownTime--;
 		} else {
 			int newLocation = location + currentSpeed;
-			location = (newLocation >= road.getLength()) ? road.getLength()
-					: newLocation;
-			kilometrage += currentSpeed;
+			if(newLocation >= road.getLength()) {
+				newLocation = road.getLength();
+				Junction nextJ = itinerary.poll();
+				nextJ.vehicleIn(this);
+			}
+			kilometrage += newLocation - location;
+			location = newLocation;
 		}
 	}
 
