@@ -2,9 +2,9 @@ package es.ucm.fdi.ini;
 
 public class IniError extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	IniError(String msg) {
-		super(msg);
-	}
+  IniError(String msg) {
+    super(msg);
+  }
 }
