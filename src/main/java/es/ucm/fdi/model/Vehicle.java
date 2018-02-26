@@ -1,7 +1,7 @@
 package es.ucm.fdi.model;
 
-import es.ucm.fdi.ini.Ini;
-import es.ucm.fdi.ini.IniSection;
+import java.util.List;
+import java.util.Map;
 
 import java.util.Queue;
 
@@ -71,23 +71,35 @@ public class Vehicle extends SimulatedObject {
   }
 
   @Override
+  public void fillReportDetails(int time, Map<String, String> kvps) {
+
+  }
+
+  /*
+  @Override
   public String generateReport(int time) {
 
-    Ini ini = new Ini();
-    IniSection sec = new IniSection(SECTION_TAG_NAME);
+		Ini ini = new Ini();
+		IniSection sec = new IniSection(SECTION_TAG_NAME);
 
-    sec.setValue("id", id);
-    sec.setValue("time", time);
-    sec.setValue("speed", currentSpeed);
-    sec.setValue("kilometrage", kilometrage);
-    sec.setValue("faulty", breakdownTime);
-    String loc = (location == road.getLength()) ? "arrived" : "(" + road.id
-        + "," + location + ")";
-    sec.setValue("location", loc);
+		sec.setValue("id", id);
+		sec.setValue("time", time);
+		sec.setValue("speed", currentSpeed);
+		sec.setValue("kilometrage", kilometrage);
+		sec.setValue("faulty", breakdownTime);
+		String loc = (location == road.getLength()) ? "arrived" : "(" + road.id
+				+ "," + location + ")";
+		sec.setValue("location", loc);
 
-    ini.addSection(sec);
+		ini.addSection(sec);
 
-    return ini.toString();
+		return ini.toString();
+	}
+	*/
+
+  @Override
+  protected String getReportHeader() {
+    return SECTION_TAG_NAME;
   }
 
 }
