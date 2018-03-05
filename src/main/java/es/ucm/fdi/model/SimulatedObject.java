@@ -12,7 +12,7 @@ public abstract class SimulatedObject {
 
   public abstract void advance();
 
-  public abstract void fillReportDetails(int time, Map<String, String> kvps);
+  public abstract void fillReportDetails(Map<String, String> kvps);
 
   protected abstract String getReportHeader();
 
@@ -20,7 +20,7 @@ public abstract class SimulatedObject {
     kvps.put("header", getReportHeader());
     kvps.put("id", id);
     kvps.put("time", String.valueOf(time));
-    fillReportDetails(time, kvps);
+    fillReportDetails(kvps);
   }
 
   @Override

@@ -43,7 +43,7 @@ public class Junction extends SimulatedObject {
   }
 
   @Override
-  public void fillReportDetails(int time, Map<String, String> kvps) {
+  public void fillReportDetails(Map<String, String> kvps) {
     StringBuilder stringBuilder = new StringBuilder();
     for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
       stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");

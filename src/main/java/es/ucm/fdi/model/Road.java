@@ -42,14 +42,14 @@ public class Road extends SimulatedObject {
     brokenDownVehicles = false;
     vehicleList.innerValues().forEach(v -> {
       int reductionFactor = brokenDownVehicles ? 2 : 1;
-      brokenDownVehicles = brokenDownVehicles || v.getBreakdownTime() > 0;
+      brokenDownVehicles = brokenDownVehicles || v.getFaulty() > 0;
       v.setCurrentSpeed(baseSpeed / reductionFactor);
       v.advance();
     });
   }
 
   @Override
-  public void fillReportDetails(int time, Map<String, String> kvps) {
+  public void fillReportDetails(Map<String, String> kvps) {
     StringBuilder stringBuilder = new StringBuilder();
     vehicleList.innerValues().forEach(v -> stringBuilder.append("(" + v.id + "," + v.getLocation() + "),"));
     kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
