@@ -1,6 +1,7 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.model.Road;
 
 public class NewRoadEvent extends Event {
 
@@ -27,10 +28,10 @@ public class NewRoadEvent extends Event {
 
   @Override
   public void execute() {
-
+    Road road = new Road(id, length, maxSpeed);
   }
 
-  class NewRoadEventBuilder implements EventBuilder {
+  class NewRoadEventBuilder implements Event.Builder {
 
     @Override
     public Event parse(IniSection section) {

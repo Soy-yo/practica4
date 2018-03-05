@@ -1,5 +1,6 @@
 package es.ucm.fdi.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class SimulatedObject {
@@ -12,15 +13,17 @@ public abstract class SimulatedObject {
 
   public abstract void advance();
 
-  public abstract void fillReportDetails(int time, Map<String, String> kvps);
+  public abstract void fillReportDetails(Map<String, String> kvps);
 
   protected abstract String getReportHeader();
 
-  public void generateReport(int time, Map<String, String> kvps) {
+  public Map<String, String> generateReport(int time) {
+    Map<String, String> kvps = new HashMap<>();
     kvps.put("header", getReportHeader());
     kvps.put("id", id);
     kvps.put("time", String.valueOf(time));
-    fillReportDetails(time, kvps);
+    fillReportDetails(kvps);
+    return kvps;
   }
 
   @Override
