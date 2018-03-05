@@ -42,7 +42,7 @@ public class Road extends SimulatedObject {
     MultiTreeMap<Integer, Vehicle> temp = new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
     for (Vehicle v : vehicleList.innerValues()) {
       int reductionFactor = brokenDownVehicles ? 2 : 1;
-      brokenDownVehicles = brokenDownVehicles || v.getBreakdownTime() > 0;
+      brokenDownVehicles = brokenDownVehicles || v.getFaulty() > 0;
       v.setCurrentSpeed(baseSpeed / reductionFactor);
       v.advance();
       temp.putValue(v.getLocation(), v);

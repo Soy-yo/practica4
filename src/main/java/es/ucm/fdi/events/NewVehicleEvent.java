@@ -21,7 +21,7 @@ public class NewVehicleEvent extends Event {
 
 	}
 
-	class NewVehicleEventBuilder implements EventBuilder {
+	class NewVehicleEventBuilder implements Event.Builder {
 
 		// TODO: revisar throws
 		@Override

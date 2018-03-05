@@ -20,10 +20,9 @@ public class MakeVehicleFaultyEvent extends Event {
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-
 	}
 
-	class MakeVehicleFaultyEventBuilder implements EventBuilder {
+  class MakeVehicleFaultyEventBuilder implements Event.Builder {
 
 		@Override
 		public Event parse(IniSection section) {
