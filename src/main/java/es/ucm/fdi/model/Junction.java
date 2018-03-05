@@ -34,14 +34,13 @@ public class Junction extends SimulatedObject {
     Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
     if (!vehicleList.isEmpty()) {
       Vehicle vehicle = vehicleList.peek();
-      if (vehicle.moveToNextRoad()) {
-        vehicleList.poll();
-      }
+      vehicle.moveToNextRoad();
+      vehicleList.poll();
     }
   }
 
   @Override
-  public void fillReportDetails(int time, Map<String, String> kvps) {
+  public void fillReportDetails(Map<String, String> kvps) {
     StringBuilder stringBuilder = new StringBuilder();
     for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
       stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");

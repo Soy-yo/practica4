@@ -9,11 +9,10 @@ public class Road extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "road_report";
 
+  // TODO: pedir Junctions?
   private int length;
   private int maxSpeed;
   private MultiTreeMap<Integer, Vehicle> vehicleList;
-  // variable usada para advance
-  private boolean brokenDownVehicles;
 
   public Road(String id, int length, int maxSpeed) {
     super(id);
@@ -39,20 +38,27 @@ public class Road extends SimulatedObject {
   @Override
   public void advance() {
     final int baseSpeed = (int) Math.min(maxSpeed, maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-    brokenDownVehicles = false;
-    vehicleList.innerValues().forEach(v -> {
+    boolean brokenDownVehicles = false;
+    MultiTreeMap<Integer, Vehicle> temp = new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
+    for (Vehicle v : vehicleList.innerValues()) {
       int reductionFactor = brokenDownVehicles ? 2 : 1;
       brokenDownVehicles = brokenDownVehicles || v.getBreakdownTime() > 0;
       v.setCurrentSpeed(baseSpeed / reductionFactor);
       v.advance();
-    });
+      temp.putValue(v.getLocation(), v);
+    }
+    vehicleList = temp;
   }
 
   @Override
-  public void fillReportDetails(int time, Map<String, String> kvps) {
-    StringBuilder stringBuilder = new StringBuilder();
-    vehicleList.innerValues().forEach(v -> stringBuilder.append("(" + v.id + "," + v.getLocation() + "),"));
-    kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
+  public void fillReportDetails(Map<String, String> kvps) {
+    if (vehicleList.sizeOfValues() > 0) {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (Vehicle v : vehicleList.innerValues()) {
+        stringBuilder.append("(" + v.id + "," + v.getLocation() + "),");
+      }
+      kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
+    }
   }
 
   @Override
