@@ -1,6 +1,5 @@
 package es.ucm.fdi.model;
 
-
 import java.util.*;
 
 public class Junction extends SimulatedObject {
@@ -63,3 +62,5 @@ public class Junction extends SimulatedObject {
   private String lightColor(Road road) {
     return road.equals(currentRoadOn) ? "green" : "red";
   }
+
+}

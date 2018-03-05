@@ -1,8 +1,6 @@
 package es.ucm.fdi.model;
 
-import java.util.List;
 import java.util.Map;
-
 import java.util.Queue;
 
 public class Vehicle extends SimulatedObject {
@@ -14,7 +12,7 @@ public class Vehicle extends SimulatedObject {
   private Road road;
   private int location;
   private Queue<Junction> itinerary;
-  private int breakdownTime;
+  private int faulty;
   private boolean hasArrived;
   private int kilometrage;
 
@@ -24,18 +22,18 @@ public class Vehicle extends SimulatedObject {
     this.road = road;
   }
 
-  public int getBreakdownTime() {
-    return breakdownTime;
+  public int getFaulty() {
+    return faulty;
   }
 
-  public void setBreakdownTime(int breakdownTime) {
-    this.breakdownTime += breakdownTime;
+  public void setFaulty(int faulty) {
+    this.faulty += faulty;
   }
 
   @Override
   public void advance() {
-    if (breakdownTime > 0) {
-      breakdownTime--;
+    if (faulty > 0) {
+      faulty--;
     } else {
       int newLocation = location + currentSpeed;
       if (newLocation >= road.getLength()) {
@@ -65,37 +63,22 @@ public class Vehicle extends SimulatedObject {
   public int getLocation() {
     return location;
   }
-
+  
+  public Road getRoad() {
+		return road;
+	}
+  
   public void setCurrentSpeed(int currentSpeed) {
     this.currentSpeed = Math.min(currentSpeed, maxSpeed);
   }
 
   @Override
-  public void fillReportDetails(int time, Map<String, String> kvps) {
-
+  public void fillReportDetails(Map<String, String> kvps) {
+    kvps.put("speed", String.valueOf(currentSpeed));
+    kvps.put("kilometrage", String.valueOf(kilometrage));
+    kvps.put("faulty", String.valueOf(faulty));
+    kvps.put("location", "(" + road + "," + location + ")");
   }
-
-  /*
-  @Override
-  public String generateReport(int time) {
-
-		Ini ini = new Ini();
-		IniSection sec = new IniSection(SECTION_TAG_NAME);
-
-		sec.setValue("id", id);
-		sec.setValue("time", time);
-		sec.setValue("speed", currentSpeed);
-		sec.setValue("kilometrage", kilometrage);
-		sec.setValue("faulty", breakdownTime);
-		String loc = (location == road.getLength()) ? "arrived" : "(" + road.id
-				+ "," + location + ")";
-		sec.setValue("location", loc);
-
-		ini.addSection(sec);
-
-		return ini.toString();
-	}
-	*/
 
   @Override
   protected String getReportHeader() {
