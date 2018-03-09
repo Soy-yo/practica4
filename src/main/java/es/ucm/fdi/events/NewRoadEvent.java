@@ -2,6 +2,7 @@ package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.model.Road;
+import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewRoadEvent extends Event {
 
@@ -12,13 +13,8 @@ public class NewRoadEvent extends Event {
   private int maxSpeed;
   private int length;
 
-  public NewRoadEvent(
-      int time,
-      String id,
-      String sourceId,
-      String destinationId,
-      int maxSpeed,
-      int length) {
+  NewRoadEvent(int time, String id, String sourceId, String destinationId, int maxSpeed,
+               int length) {
     super(time, id);
     this.sourceId = sourceId;
     this.destinationId = destinationId;
@@ -27,24 +23,41 @@ public class NewRoadEvent extends Event {
   }
 
   @Override
-  public void execute() {
+  public void execute(TrafficSimulator simulator) {
     Road road = new Road(id, length, maxSpeed);
+    simulator.addSimulatedObject(road);
   }
 
-  class NewRoadEventBuilder implements Event.Builder {
+  static class Builder implements Event.Builder {
 
     @Override
     public Event parse(IniSection section) {
       if (!section.getTag().equals(SECTION_TAG_NAME)) {
         return null;
       }
-      // TODO: try catch...
-      int time = parseInt(section, "time", 0);
+      int time = parseInt(section, "time", 0, x -> x >= 0);
+      // TODO: NPE check
       String id = section.getValue("id");
       String src = section.getValue("sec");
       String dest = section.getValue("dest");
-      int maxSpeed = Integer.parseInt(section.getValue("max_speed"));
-      int length = Integer.parseInt(section.getValue("length"));
+      int maxSpeed;
+      try {
+        maxSpeed = Integer.parseInt(section.getValue("max_speed"));
+        if (maxSpeed <= 0) {
+          throw new IllegalArgumentException("Road max speed must be positive");
+        }
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Road max speed must be a number", e);
+      }
+      int length;
+      try {
+        length = Integer.parseInt(section.getValue("length"));
+        if (length <= 0) {
+          throw new IllegalArgumentException("Road length must be positive");
+        }
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Road length must be a number", e);
+      }
       return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
     }
 

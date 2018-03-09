@@ -1,6 +1,8 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.model.TrafficSimulator;
+import es.ucm.fdi.model.Vehicle;
 
 public class NewVehicleEvent extends Event {
 
@@ -9,36 +11,45 @@ public class NewVehicleEvent extends Event {
 	private int maxSpeed;
 	private String[] itinerary;
 
-	public NewVehicleEvent(int time, String id, int maxSpeed, String[] itinerary) {
+  NewVehicleEvent(int time, String id, int maxSpeed, String[] itinerary) {
 		super(time, id);
 		this.maxSpeed = maxSpeed;
 		this.itinerary = itinerary;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+  public void execute(TrafficSimulator simulator) {
+    // FIXME: itinerario en vez de road
+    Vehicle vehicle = new Vehicle(id, maxSpeed, null);
+    simulator.addSimulatedObject(vehicle);
+  }
 
-	}
+  static class Builder implements Event.Builder {
 
-	class NewVehicleEventBuilder implements Event.Builder {
-
-		// TODO: revisar throws
 		@Override
-		public Event parse(IniSection section) throws IllegalArgumentException {
+    public Event parse(IniSection section) {
 			if (!section.getTag().equals(SECTION_TAG_NAME)) {
 				return null;
 			}
-			// TODO: try catch...
-			int time = parseInt(section, "time", 0);
+      int time = parseInt(section, "time", 0, x -> x >= 0);
 			String id = section.getValue("id");
-			int maxSpeed = Integer.parseInt(section.getValue("max_speed"));
+      int maxSpeed;
+      try {
+        maxSpeed = Integer.parseInt(section.getValue("max_speed"));
+        if (maxSpeed <= 0) {
+          throw new IllegalArgumentException("Vehicle max speed must be positive");
+        }
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Vehicle max speed must be a number", e);
+      }
 			String[] itinerary = parseIdList(section, "itinerary");
-			if (itinerary.length < 2) {
-				throw new IllegalArgumentException();
+      if (itinerary == null || itinerary.length < 2) {
+        throw new IllegalArgumentException("Vehicle itinerary list must contain at least " +
+            "2 junctions");
 			}
 			return new NewVehicleEvent(time, id, maxSpeed, itinerary);
 		}
 
 	}
+
 }

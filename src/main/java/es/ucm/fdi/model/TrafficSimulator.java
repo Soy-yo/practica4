@@ -25,11 +25,20 @@ public class TrafficSimulator {
     events.putValue(event.getTime(), event);
   }
 
+  public void addSimulatedObject(SimulatedObject simulatedObject) {
+    // TODO: añadir a roadMap cuando esté
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public void makeVehicleFaulty(String vehicleId, int duration) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
   public void execute(int simulationSteps, OutputStream out) {
     int timelimit = currentTime + simulationSteps - 1;
     while (currentTime <= timelimit) {
       for (Event e : events.get(currentTime)) {
-        e.execute();
+        e.execute(this);
       }
       for (SimulatedObject road : simulatedObjects.get("road")) {
         road.advance();
