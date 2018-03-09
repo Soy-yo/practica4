@@ -15,6 +15,14 @@ public class NewVehicleEvent extends Event {
 		this.itinerary = itinerary;
 	}
 
+	public String[] getItinerary() {
+		return itinerary;
+	}
+
+	public int getMaxSpeed() {
+		return maxSpeed;
+	}
+
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub

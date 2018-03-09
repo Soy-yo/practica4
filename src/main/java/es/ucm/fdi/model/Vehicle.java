@@ -16,10 +16,10 @@ public class Vehicle extends SimulatedObject {
   private boolean hasArrived;
   private int kilometrage;
 
-  public Vehicle(String id, int maxSpeed, Road road) {
+  public Vehicle(String id, int maxSpeed, Queue<Junction> itinerary) {
     super(id);
     this.maxSpeed = maxSpeed;
-    this.road = road;
+    this.itinerary = itinerary;
   }
 
   public int getFaulty() {

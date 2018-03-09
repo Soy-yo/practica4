@@ -17,6 +17,10 @@ public abstract class SimulatedObject {
 
   protected abstract String getReportHeader();
 
+  public String getId() {
+	  return id;
+  }
+  
   public Map<String, String> generateReport(int time) {
     Map<String, String> kvps = new HashMap<>();
     kvps.put("header", getReportHeader());

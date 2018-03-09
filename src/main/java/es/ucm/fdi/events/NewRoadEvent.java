@@ -25,6 +25,15 @@ public class NewRoadEvent extends Event {
     this.maxSpeed = maxSpeed;
     this.length = length;
   }
+  
+  public int getMaxSpeed() {
+	return maxSpeed;
+  }
+
+  public int getLength() {
+	return length;
+  }
+
 
   @Override
   public void execute() {

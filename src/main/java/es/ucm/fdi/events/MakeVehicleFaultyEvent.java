@@ -30,7 +30,7 @@ public class MakeVehicleFaultyEvent extends Event {
 				return null;
 			}
 			// TODO: try catch...
-			// TODO: no hay ID
+			// FIXME: no hay ID
 			int time = parseInt(section, "time", 0);
 			String id = section.getValue("id");
 			String[] vehicles = parseIdList(section, "vehicles");
