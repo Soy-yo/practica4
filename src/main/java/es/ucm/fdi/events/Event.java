@@ -1,13 +1,16 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.model.TrafficSimulator;
+
+import java.util.function.Predicate;
 
 public abstract class Event {
 
   protected final int time;
   protected final String id;
 
-  public Event(int time, String id) {
+  Event(int time, String id) {
     this.time = time;
     this.id = id;
   }
@@ -20,7 +23,7 @@ public abstract class Event {
     return id;
   }
 
-  public abstract void execute();
+  public abstract void execute(TrafficSimulator simulator);
 
   public interface Builder {
 
@@ -30,12 +33,16 @@ public abstract class Event {
       return id.matches("[a-zA-Z1-9_]++");
     }
 
-    default int parseInt(IniSection section, String key, int defaultValue) {
+    default int parseInt(IniSection section, String key, int defaultValue,
+                         Predicate<Integer> predicate) {
       try {
-        return Integer.parseInt(section.getValue(key));
+        int result = Integer.parseInt(section.getValue(key));
+        if (predicate.test(result)) {
+          return result;
+        }
       } catch (Exception e) {
-        return defaultValue;
       }
+      return defaultValue;
     }
 
     default String[] parseIdList(IniSection section, String key) {

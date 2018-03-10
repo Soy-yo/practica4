@@ -9,7 +9,6 @@ public class TrafficSimulator {
 
 	private int currentTime;
 	private MultiTreeMap<Integer, Event> events;
-	// private MultiTreeMap<String, SimulatedObject> simulatedObjects;
 	private RoadMap roadMap;
 
 	public TrafficSimulator() {
@@ -20,13 +19,13 @@ public class TrafficSimulator {
 	public void addEvent(Event event) {
 		// TODO: comprobar id único (se comprueba al añadirlos) Edu 09/03
 		if (event.getTime() < currentTime) {
-			throw new IllegalStateException("Event " + event.getId()
-					+ " is breaking the space-time " + "continuum");
+			throw new IllegalStateException(
+					"Event " + event.getId() + " is breaking the space-time continuum");
 		}
 		events.putValue(event.getTime(), event);
 	}
 
-	public void addSimObject(SimulatedObject o) {
+	public void addSimulatedObject(SimulatedObject o) {
 		switch (o.getClass().getName()) {
 		case "Vehicle":
 			Vehicle v = (Vehicle) o;
