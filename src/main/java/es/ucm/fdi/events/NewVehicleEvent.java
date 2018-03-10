@@ -1,8 +1,12 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.model.Junction;
 import es.ucm.fdi.model.TrafficSimulator;
 import es.ucm.fdi.model.Vehicle;
+
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class NewVehicleEvent extends Event {
 
@@ -27,8 +31,11 @@ public class NewVehicleEvent extends Event {
 
 	@Override
   public void execute(TrafficSimulator simulator) {
-    // FIXME: itinerario en vez de road
-    Vehicle vehicle = new Vehicle(id, maxSpeed, null);
+    Queue<Junction> junctions = new ArrayDeque<>();
+    for (int i = 0; i < itinerary.length; i++) {
+      junctions.add(new Junction(itinerary[i]));
+    }
+    Vehicle vehicle = new Vehicle(id, maxSpeed, junctions);
     simulator.addSimulatedObject(vehicle);
   }
 

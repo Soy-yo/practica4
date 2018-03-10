@@ -12,12 +12,16 @@ public class TrafficSimulator {
 	private RoadMap roadMap;
 
 	public TrafficSimulator() {
-		currentTime = 0;
-		events = new MultiTreeMap<>();
-	}
+    reset();
+  }
+
+  public void reset() {
+    currentTime = 0;
+    events = new MultiTreeMap<>();
+    roadMap = new RoadMap();
+  }
 
 	public void addEvent(Event event) {
-		// TODO: comprobar id único (se comprueba al añadirlos) Edu 09/03
 		if (event.getTime() < currentTime) {
 			throw new IllegalStateException(
 					"Event " + event.getId() + " is breaking the space-time continuum");
@@ -26,24 +30,22 @@ public class TrafficSimulator {
 	}
 
 	public void addSimulatedObject(SimulatedObject o) {
+    // TODO: instanceof mejor?
 		switch (o.getClass().getName()) {
-		case "Vehicle":
-			Vehicle v = (Vehicle) o;
-			roadMap.addVehicle(v);
-			break;
-		case "Road":
-			Road r = (Road) o;
-			roadMap.addRoad(r);
-			break;
-		case "Junction":
-			Junction j = (Junction) o;
-			roadMap.addJunction(j);
-			break;
+      case "Vehicle":
+        roadMap.addVehicle((Vehicle) o);
+        break;
+      case "Road":
+        roadMap.addRoad((Road) o);
+        break;
+      case "Junction":
+        roadMap.addJunction((Junction) o);
+        break;
+      default:
 		}
 	}
 
-	public void makeVehicleFaulty(String id, int time)
-			throws IllegalArgumentException {
+  public void makeVehicleFaulty(String id, int time) throws IllegalArgumentException {
 		Vehicle v = roadMap.vehicleSearch(id);
 		if (v != null) {
 			v.setFaulty(time);
@@ -53,27 +55,27 @@ public class TrafficSimulator {
 	}
 
 	public void execute(int simulationSteps, OutputStream out) {
-		int timelimit = currentTime + simulationSteps - 1;
-		while (currentTime <= timelimit) {
+    int timeLimit = currentTime + simulationSteps - 1;
+    while (currentTime <= timeLimit) {
 			for (Event e : events.get(currentTime)) {
-				e.execute();
+        e.execute(this);
 			}
-			for (SimulatedObject road : roadMap.getRoads()) {
-				road.advance();
+      for (Road r : roadMap.getRoads()) {
+        r.advance();
 			}
-			for (SimulatedObject junction : roadMap.getJunctions()) {
-				junction.advance();
+      for (Junction j : roadMap.getJunctions()) {
+        j.advance();
 			}
 			currentTime++;
 			if (out != null) {
-				for (SimulatedObject junction : roadMap.getJunctions()) {
-					junction.generateReport(currentTime);
+        for (Junction j : roadMap.getJunctions()) {
+          j.generateReport(currentTime);
 				}
-				for (SimulatedObject road : roadMap.getRoads()) {
-					road.generateReport(currentTime);
+        for (Road r : roadMap.getRoads()) {
+          r.generateReport(currentTime);
 				}
-				for (SimulatedObject vehicle : roadMap.getVehicles()) {
-					vehicle.generateReport(currentTime);
+        for (Vehicle v : roadMap.getVehicles()) {
+          v.generateReport(currentTime);
 				}
 			}
 		}
