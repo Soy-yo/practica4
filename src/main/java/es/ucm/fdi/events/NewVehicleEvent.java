@@ -10,7 +10,7 @@ import java.util.Queue;
 
 public class NewVehicleEvent extends Event {
 
-	public static final String SECTION_TAG_NAME = "new_vehicle";
+  private static final String SECTION_TAG_NAME = "new_vehicle";
 
 	private int maxSpeed;
 	private String[] itinerary;
@@ -19,14 +19,6 @@ public class NewVehicleEvent extends Event {
 		super(time, id);
 		this.maxSpeed = maxSpeed;
 		this.itinerary = itinerary;
-	}
-
-	public String[] getItinerary() {
-		return itinerary;
-	}
-
-	public int getMaxSpeed() {
-		return maxSpeed;
 	}
 
 	@Override
