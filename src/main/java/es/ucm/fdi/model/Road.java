@@ -9,20 +9,32 @@ public class Road extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "road_report";
 
-  // TODO: pedir Junctions?
   private int length;
   private int maxSpeed;
   private MultiTreeMap<Integer, Vehicle> vehicleList;
+  private String sourceId;
+  private String destinationId;
 
-  public Road(String id, int length, int maxSpeed) {
+
+  public Road(String id, int length, int maxSpeed, String sourceId, String destinationId) {
     super(id);
     this.length = length;
     this.maxSpeed = maxSpeed;
     vehicleList = new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
+    this.sourceId = sourceId;
+    this.destinationId = destinationId;
   }
 
   public int getLength() {
     return length;
+  }
+  
+  public String getSource() {
+		return sourceId;
+	}
+  
+  public String getDestiny() {
+	return destinationId;
   }
 
   public void vehicleIn(Vehicle vehicle) {

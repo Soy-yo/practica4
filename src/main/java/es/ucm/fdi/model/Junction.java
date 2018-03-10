@@ -37,6 +37,15 @@ public class Junction extends SimulatedObject {
       vehicleList.poll();
     }
   }
+  
+  public Road getStraightRoad(String previousJunction) {
+	  for(Road r : enteringRoads.keySet()) {
+		 if(r.getSource().equals(previousJunction)) {
+			 return r;
+		 }
+	  }
+	  return null;
+  }
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
@@ -53,7 +62,7 @@ public class Junction extends SimulatedObject {
     }
     kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
   }
-
+  
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;

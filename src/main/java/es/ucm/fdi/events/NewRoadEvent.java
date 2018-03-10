@@ -24,7 +24,7 @@ public class NewRoadEvent extends Event {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    Road road = new Road(id, length, maxSpeed);
+    Road road = new Road(id, length, maxSpeed, sourceId, destinationId);
     simulator.addSimulatedObject(road);
   }
 

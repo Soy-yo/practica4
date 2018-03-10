@@ -50,12 +50,12 @@ public class Vehicle extends SimulatedObject {
     if (road != null) {
       road.vehicleOut(this);
     }
-    // TODO: probablemente no sea new Road(); esto está para que compile
-    Road newRoad = hasArrived ? null : new Road("id", 0, 0);
-    if (newRoad == null) {
+    String actual = itinerary.poll().getId();
+    Junction next = itinerary.peek();
+    if (next == null) {
       hasArrived = true;
     } else {
-      road = newRoad;
+      road = next.getStraightRoad(actual);
       road.vehicleIn(this);
     }
   }

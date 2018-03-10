@@ -81,6 +81,6 @@ public class RoadMap {
 
 	public List<Junction> getJunctions() {
     return Collections.unmodifiableList(new ArrayList<>(junctions.values()));
-  }
+	}
 
 }
