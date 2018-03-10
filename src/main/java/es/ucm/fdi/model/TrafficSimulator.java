@@ -1,9 +1,13 @@
 package es.ucm.fdi.model;
 
 import es.ucm.fdi.events.Event;
+import es.ucm.fdi.ini.Ini;
+import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.util.MultiTreeMap;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class TrafficSimulator {
 
@@ -53,6 +57,24 @@ public class TrafficSimulator {
 			throw new IllegalArgumentException("Vehicle not found");
 		}
 	}
+  
+  private void writeReport(Map<String, String> report, OutputStream out) {
+	  	Ini ini = new Ini();
+	    IniSection sec;
+
+	    sec = new IniSection(report.get(""));
+	    report.remove("");
+	    for (Map.Entry<String, String> entry : report.entrySet())
+	    {
+	        sec.setValue(entry.getKey(), entry.getValue());
+	    }
+	    ini.addSection(sec);
+	    try {
+			ini.store(out);
+		} catch (IOException e) {
+			// FIXME: no se que hacer aqui
+		}
+  }
 
 	public void execute(int simulationSteps, OutputStream out) {
     int timeLimit = currentTime + simulationSteps - 1;
@@ -69,16 +91,16 @@ public class TrafficSimulator {
 			currentTime++;
 			if (out != null) {
         for (Junction j : roadMap.getJunctions()) {
-          j.generateReport(currentTime);
+          writeReport(j.generateReport(currentTime), out);
 				}
         for (Road r : roadMap.getRoads()) {
-          r.generateReport(currentTime);
+          writeReport(r.generateReport(currentTime), out);
 				}
         for (Vehicle v : roadMap.getVehicles()) {
-          v.generateReport(currentTime);
+          writeReport(v.generateReport(currentTime), out);
 				}
 			}
 		}
 	}
-
+	
 }

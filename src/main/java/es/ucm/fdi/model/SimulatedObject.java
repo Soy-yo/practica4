@@ -23,7 +23,7 @@ public abstract class SimulatedObject {
   
   public Map<String, String> generateReport(int time) {
     Map<String, String> kvps = new HashMap<>();
-    kvps.put("header", getReportHeader());
+    kvps.put("", getReportHeader());
     kvps.put("id", id);
     kvps.put("time", String.valueOf(time));
     fillReportDetails(kvps);
