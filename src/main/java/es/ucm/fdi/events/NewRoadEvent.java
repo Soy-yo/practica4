@@ -32,14 +32,22 @@ public class NewRoadEvent extends Event {
 
     @Override
     public Event parse(IniSection section) {
+
       if (!section.getTag().equals(SECTION_TAG_NAME)) {
         return null;
       }
+
       int time = parseInt(section, "time", 0, x -> x >= 0);
+
       // TODO: NPE check
       String id = section.getValue("id");
+      if (!isValid(id)) {
+        throw new IllegalArgumentException("id " + id + " is not a valid id");
+      }
+
       String src = section.getValue("sec");
       String dest = section.getValue("dest");
+
       int maxSpeed;
       try {
         maxSpeed = Integer.parseInt(section.getValue("max_speed"));
@@ -49,6 +57,7 @@ public class NewRoadEvent extends Event {
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Road max speed must be a number", e);
       }
+
       int length;
       try {
         length = Integer.parseInt(section.getValue("length"));
@@ -58,6 +67,7 @@ public class NewRoadEvent extends Event {
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Road length must be a number", e);
       }
+
       return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
     }
 

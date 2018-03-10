@@ -28,13 +28,18 @@ public class MakeVehicleFaultyEvent extends Event {
 
 		@Override
 		public Event parse(IniSection section) {
-			if (!section.getTag().equals(SECTION_TAG_NAME)) {
+
+      if (!section.getTag().equals(SECTION_TAG_NAME)) {
 				return null;
 			}
-			// TODO: no hay ID
+
+      // TODO: no hay ID
       int time = parseInt(section, "time", 0, x -> x >= 0);
+
       //String id = section.getValue("id");
-			String[] vehicles = parseIdList(section, "vehicles");
+
+      String[] vehicles = parseIdList(section, "vehicles");
+
       int duration;
       try {
         duration = Integer.parseInt(section.getValue("duration"));
@@ -44,6 +49,7 @@ public class MakeVehicleFaultyEvent extends Event {
       } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Vehicle faulty duration must be a number", e);
       }
+
       return new MakeVehicleFaultyEvent(time, "", vehicles, duration);
 		}
 

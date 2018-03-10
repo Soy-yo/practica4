@@ -22,11 +22,18 @@ public class NewJunctionEvent extends Event {
 
     @Override
     public Event parse(IniSection section) {
+
       if (!section.getTag().equals(SECTION_TAG_NAME)) {
         return null;
       }
+
       int time = parseInt(section, "time", 0, x -> x >= 0);
+
       String id = section.getValue("id");
+      if (!isValid(id)) {
+        throw new IllegalArgumentException("id " + id + " is not a valid id");
+      }
+
       return new NewJunctionEvent(time, id);
     }
 

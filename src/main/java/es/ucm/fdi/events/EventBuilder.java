@@ -2,6 +2,7 @@ package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
 
+// TODO: mover a Controller?
 public class EventBuilder {
 
   private static final Event.Builder[] SUPPORTED_EVENTS = {
