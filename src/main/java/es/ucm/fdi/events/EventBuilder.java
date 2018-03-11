@@ -2,7 +2,6 @@ package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
 
-// TODO: mover a Controller?
 public class EventBuilder {
 
   private static final Event.Builder[] SUPPORTED_EVENTS = {
@@ -21,7 +20,6 @@ public class EventBuilder {
         i++;
       }
     } catch (IllegalArgumentException e) {
-      // TODO: esta excepcion por ejemplo...
       throw new IllegalStateException("Something went wrong while parsing " +
           section.getTag(), e);
     }

@@ -1,6 +1,6 @@
 package es.ucm.fdi.model;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class SimulatedObject {
@@ -18,11 +18,11 @@ public abstract class SimulatedObject {
   protected abstract String getReportHeader();
 
   public String getId() {
-	  return id;
+    return id;
   }
-  
+
   public Map<String, String> generateReport(int time) {
-    Map<String, String> kvps = new HashMap<>();
+    Map<String, String> kvps = new LinkedHashMap<>();
     kvps.put("", getReportHeader());
     kvps.put("id", id);
     kvps.put("time", String.valueOf(time));
@@ -45,6 +45,11 @@ public abstract class SimulatedObject {
   @Override
   public int hashCode() {
     return id.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return id;
   }
 
 }

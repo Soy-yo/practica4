@@ -25,44 +25,55 @@ public class Junction extends SimulatedObject {
 
   @Override
   public void advance() {
+    if (!enteringRoads.isEmpty()) {
+      if (currentRoadOn != null) {
+        Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
+        if (!vehicleList.isEmpty()) {
+          Vehicle vehicle = vehicleList.poll();
+          vehicle.moveToNextRoad();
+        }
+      }
+      switchLights();
+    }
+  }
+
+  private void switchLights() {
     // pone en verde el primer semáforo la primera vez o cada vuelta
     if (nextRoad == null || !nextRoad.hasNext()) {
       nextRoad = enteringRoads.keySet().iterator();
     }
     currentRoadOn = nextRoad.next();
-    Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
-    if (!vehicleList.isEmpty()) {
-      Vehicle vehicle = vehicleList.peek();
-      vehicle.moveToNextRoad();
-      vehicleList.poll();
-    }
   }
-  
+
   public Road getStraightRoad(String previousJunction) {
-	  for(Road r : enteringRoads.keySet()) {
-		 if(r.getSource().equals(previousJunction)) {
-			 return r;
-		 }
-	  }
-	  return null;
+    for (Road r : enteringRoads.keySet()) {
+      if (r.getSource().equals(previousJunction)) {
+        return r;
+      }
+    }
+    return null;
   }
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
-      stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");
-      for (Vehicle v : e.getValue()) {
-        stringBuilder.append(v.id + ",");
+    if (!enteringRoads.isEmpty()) {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
+        stringBuilder.append("(" + e.getKey() + "," + lightColor(e.getKey()) + ",[");
+        for (Vehicle v : e.getValue()) {
+          stringBuilder.append(v + ",");
+        }
+        if (!e.getValue().isEmpty()) {
+          stringBuilder.deleteCharAt(stringBuilder.length() - 1); // coma
+        }
+        stringBuilder.append("]),");
       }
-      if (!e.getValue().isEmpty()) {
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1); // coma
-      }
-      stringBuilder.append("]),");
+      kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
+    } else {
+      kvps.put("queues", "");
     }
-    kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
   }
-  
+
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;

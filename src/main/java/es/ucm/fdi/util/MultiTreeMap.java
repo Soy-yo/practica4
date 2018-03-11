@@ -44,7 +44,12 @@ public class MultiTreeMap<K, V> extends TreeMap<K, ArrayList<V>> {
     if (!containsKey(key)) {
       return false;
     }
-    return get(key).remove(value);
+    List<V> values = get(key);
+    boolean result = values.remove(value);
+    if (values.isEmpty()) {
+      remove(key);
+    }
+    return result;
   }
 
   /**

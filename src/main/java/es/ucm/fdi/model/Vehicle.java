@@ -1,7 +1,6 @@
 package es.ucm.fdi.model;
 
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Vehicle extends SimulatedObject {
 
@@ -14,12 +13,33 @@ public class Vehicle extends SimulatedObject {
   private Queue<Junction> itinerary;
   private int faulty;
   private boolean hasArrived;
+  private boolean inJunction;
   private int kilometrage;
 
   public Vehicle(String id, int maxSpeed, Queue<Junction> itinerary) {
     super(id);
     this.maxSpeed = maxSpeed;
+    currentSpeed = 0;
+    location = 0;
     this.itinerary = itinerary;
+    faulty = 0;
+    hasArrived = false;
+    inJunction = false;
+    kilometrage = 0;
+  }
+
+  public int getLocation() {
+    return location;
+  }
+
+  public Road getRoad() {
+    return road;
+  }
+
+  public void setCurrentSpeed(int currentSpeed) {
+    if (faulty == 0 && !inJunction) {
+      this.currentSpeed = Math.min(currentSpeed, maxSpeed);
+    }
   }
 
   public int getFaulty() {
@@ -28,18 +48,25 @@ public class Vehicle extends SimulatedObject {
 
   public void setFaulty(int faulty) {
     this.faulty += faulty;
+    currentSpeed = 0;
+  }
+
+  public List<Junction> getItinerary() {
+    return Collections.unmodifiableList(new ArrayList<>(itinerary));
   }
 
   @Override
   public void advance() {
     if (faulty > 0) {
       faulty--;
-    } else {
+    } else if (!inJunction) {
       int newLocation = location + currentSpeed;
       if (newLocation >= road.getLength()) {
         newLocation = road.getLength();
-        Junction nextJ = itinerary.poll();
-        nextJ.vehicleIn(this);
+        Junction nextJunction = itinerary.peek();
+        nextJunction.vehicleIn(this);
+        currentSpeed = 0;
+        inJunction = true;
       }
       kilometrage += newLocation - location;
       location = newLocation;
@@ -50,34 +77,28 @@ public class Vehicle extends SimulatedObject {
     if (road != null) {
       road.vehicleOut(this);
     }
-    String actual = itinerary.poll().getId();
-    Junction next = itinerary.peek();
-    if (next == null) {
-      hasArrived = true;
-    } else {
-      road = next.getStraightRoad(actual);
-      road.vehicleIn(this);
+    if (!hasArrived) {
+      String actual = itinerary.poll().getId();
+      Junction next = itinerary.peek();
+      if (next == null) {
+        hasArrived = true;
+        currentSpeed = 0;
+        road.vehicleOut(this);
+      } else {
+        road = next.getStraightRoad(actual);
+        location = 0;
+        road.vehicleIn(this);
+      }
+      inJunction = false;
     }
-  }
-
-  public int getLocation() {
-    return location;
-  }
-  
-  public Road getRoad() {
-		return road;
-	}
-  
-  public void setCurrentSpeed(int currentSpeed) {
-    this.currentSpeed = Math.min(currentSpeed, maxSpeed);
   }
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
-    kvps.put("speed", String.valueOf(currentSpeed));
-    kvps.put("kilometrage", String.valueOf(kilometrage));
-    kvps.put("faulty", String.valueOf(faulty));
-    kvps.put("location", "(" + road + "," + location + ")");
+    kvps.put("speed", "" + currentSpeed);
+    kvps.put("kilometrage", "" + kilometrage);
+    kvps.put("faulty", "" + faulty);
+    kvps.put("location", hasArrived ? "arrived" : "(" + road.id + "," + location + ")");
   }
 
   @Override
