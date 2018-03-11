@@ -2,6 +2,7 @@ package es.ucm.fdi.control;
 
 import es.ucm.fdi.events.Event;
 import es.ucm.fdi.events.EventBuilder;
+import es.ucm.fdi.excepcions.SimulatorError;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.model.TrafficSimulator;
@@ -19,17 +20,16 @@ public class Controller {
     this.simulator = simulator;
   }
 
-  // TODO: implementar
-  public void reset() {
-    throw new UnsupportedOperationException("Not implemented yet");
-  }
-
   public void setOutputStream(OutputStream os) {
     outputStream = os;
   }
 
-  public void run(int ticks) {
-    simulator.execute(ticks, outputStream);
+  public void run(int ticks) throws SimulatorError {
+    try {
+      simulator.execute(ticks, outputStream);
+    } catch (SimulatorError e) {
+      throw new SimulatorError("Execution failed", e);
+    }
   }
 
   public void loadEvents(InputStream is) throws IOException {
@@ -44,7 +44,7 @@ public class Controller {
           }
           simulator.addEvent(event);
         } catch (IllegalStateException e) {
-          // TODO: hacer algo aquí?
+          throw new IllegalStateException("Failed while trying to load events", e);
         }
       }
     } catch (IOException e) {

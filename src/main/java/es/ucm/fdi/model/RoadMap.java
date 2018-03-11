@@ -39,7 +39,7 @@ public class RoadMap {
     List<Junction> itinerary = v.getItinerary();
     for (Junction j : itinerary) {
       if (!junctions.containsKey(j.getId())) {
-        throw new IllegalArgumentException("Junction " + j.getId() + " in vehicle's " + v.getId()
+        throw new IllegalArgumentException("Junction " + j + " in vehicle's " + v
             + " itinerary does not exists in the road map");
       }
     }
@@ -53,10 +53,10 @@ public class RoadMap {
     }
     Junction destination = junctionSearch(r.getDestiny());
     if (!junctions.containsKey(r.getSource())) {
-      throw new IllegalArgumentException("Couldn't find source for road" + r.getId());
+      throw new IllegalArgumentException("Couldn't find source for road " + r.getId());
     }
     if (destination == null) {
-      throw new IllegalArgumentException("Couldn't find destination for road" + r.getId());
+      throw new IllegalArgumentException("Couldn't find destination for road " + r.getId());
     }
     destination.addRoad(r);
     roads.put(r.getId(), r);
@@ -121,24 +121,6 @@ public class RoadMap {
       previousJunctionId = id;
     }
     return result;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("Vehicles:\n");
-    for (Vehicle v : vehicles.values()) {
-      sb.append("\t" + v + "\n");
-    }
-    sb.append("\nRoads:\n");
-    for (Road r : roads.values()) {
-      sb.append("\t" + r + "\n");
-    }
-    sb.append("\nJunctions:\n");
-    for (Junction j : junctions.values()) {
-      sb.append("\t" + j + "\n");
-    }
-    return sb.toString();
   }
 
 }

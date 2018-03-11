@@ -10,7 +10,6 @@ public class MakeVehicleFaultyEvent extends Event {
   private String[] vehicles;
   private int duration;
 
-  // TODO: no hay ID
   MakeVehicleFaultyEvent(int time, String id, String[] vehicles, int duration) {
     super(time, id);
     this.vehicles = vehicles;
@@ -33,10 +32,7 @@ public class MakeVehicleFaultyEvent extends Event {
         return null;
       }
 
-      // TODO: no hay ID
       int time = parseInt(section, "time", 0, x -> x >= 0);
-
-      //String id = section.getValue("id");
 
       String[] vehicles = parseIdList(section, "vehicles");
 

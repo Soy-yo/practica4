@@ -39,7 +39,6 @@ public class NewRoadEvent extends Event {
 
       int time = parseInt(section, "time", 0, x -> x >= 0);
 
-      // TODO: NPE check
       String id = section.getValue("id");
       if (!isValid(id)) {
         throw new IllegalArgumentException("id " + id + " is not a valid id");

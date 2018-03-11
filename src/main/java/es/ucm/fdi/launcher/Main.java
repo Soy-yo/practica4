@@ -1,12 +1,12 @@
 package es.ucm.fdi.launcher;
 
 import es.ucm.fdi.control.Controller;
+import es.ucm.fdi.excepcions.SimulatorError;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.model.TrafficSimulator;
 import org.apache.commons.cli.*;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
@@ -86,7 +86,7 @@ public class Main {
     }
   }
 
-  private static void parseOutFileOption(CommandLine line) throws ParseException {
+  private static void parseOutFileOption(CommandLine line) {
     outfile = line.getOptionValue("o");
   }
 
@@ -117,16 +117,11 @@ public class Main {
       throw new FileNotFoundException(path);
     }
 
-    File[] files = dir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.endsWith(".ini");
-      }
-    });
+    File[] files = dir.listFiles((d, name) -> name.endsWith(".ini"));
 
     for (File file : files) {
       test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
-          file.getAbsolutePath() + ".eout", 100);
+          file.getAbsolutePath() + ".eout", 10);
     }
 
   }
@@ -158,8 +153,11 @@ public class Main {
     controller.loadEvents(is);
     OutputStream os = outfile == null ? System.out : new FileOutputStream(outfile);
     controller.setOutputStream(os);
-    int ticks = timeLimit == null ? TIME_LIMIT_DEFAULT_VALUE : timeLimit;
-    controller.run(ticks);
+    try {
+      controller.run(timeLimit);
+    } catch (SimulatorError e) {
+      e.printStackTrace();
+    }
   }
 
   private static void start(String[] args) throws IOException {
@@ -167,8 +165,7 @@ public class Main {
     startBatchMode();
   }
 
-  public static void main(String[] args) throws IOException,
-      InvocationTargetException, InterruptedException {
+  public static void main(String[] args) throws IOException {
 
     // example command lines:
     //
@@ -182,7 +179,7 @@ public class Main {
     // Call test in order to test the simulator on all examples in a
     // directory.
     //
-    // test("resources/examples/events/basic");
+    //test("src/main/resources/examples/basic");
 
     // Call start to start the simulator from command line, etc.
     start(args);

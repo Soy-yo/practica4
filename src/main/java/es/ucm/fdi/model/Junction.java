@@ -25,21 +25,24 @@ public class Junction extends SimulatedObject {
 
   @Override
   public void advance() {
-    if (enteringRoads.isEmpty()) {
-      //throw new IllegalStateException("Junction " + id + " has no entering roads");
-      return;
+    if (!enteringRoads.isEmpty()) {
+      if (currentRoadOn != null) {
+        Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
+        if (!vehicleList.isEmpty()) {
+          Vehicle vehicle = vehicleList.poll();
+          vehicle.moveToNextRoad();
+        }
+      }
+      switchLights();
     }
+  }
+
+  private void switchLights() {
     // pone en verde el primer semáforo la primera vez o cada vuelta
     if (nextRoad == null || !nextRoad.hasNext()) {
       nextRoad = enteringRoads.keySet().iterator();
     }
     currentRoadOn = nextRoad.next();
-    Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
-    if (!vehicleList.isEmpty()) {
-      Vehicle vehicle = vehicleList.peek();
-      vehicle.moveToNextRoad();
-      vehicleList.poll();
-    }
   }
 
   public Road getStraightRoad(String previousJunction) {
@@ -56,9 +59,9 @@ public class Junction extends SimulatedObject {
     if (!enteringRoads.isEmpty()) {
       StringBuilder stringBuilder = new StringBuilder();
       for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
-        stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");
+        stringBuilder.append("(" + e.getKey() + "," + lightColor(e.getKey()) + ",[");
         for (Vehicle v : e.getValue()) {
-          stringBuilder.append(v.id + ",");
+          stringBuilder.append(v + ",");
         }
         if (!e.getValue().isEmpty()) {
           stringBuilder.deleteCharAt(stringBuilder.length() - 1); // coma
@@ -78,11 +81,6 @@ public class Junction extends SimulatedObject {
 
   private String lightColor(Road road) {
     return road.equals(currentRoadOn) ? "green" : "red";
-  }
-
-  @Override
-  public String toString() {
-    return super.toString() + ": (" + (currentRoadOn == null ? "?" : currentRoadOn.id) + ")";
   }
 
 }

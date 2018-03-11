@@ -42,24 +42,26 @@ public class Road extends SimulatedObject {
   }
 
   public void vehicleOut(Vehicle vehicle) {
-    // TODO: mirar si es necesario pedir la localización o sólo se sale desde length-1
-    int location = vehicle.getLocation();
-    vehicleList.removeValue(location, vehicle);
+    vehicleList.removeValue(vehicle.getLocation(), vehicle);
   }
 
   @Override
   public void advance() {
-    final int baseSpeed = (int) Math.min(maxSpeed, maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-    boolean brokenDownVehicles = false;
-    MultiTreeMap<Integer, Vehicle> temp = new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
-    for (Vehicle v : vehicleList.innerValues()) {
-      int reductionFactor = brokenDownVehicles ? 2 : 1;
-      brokenDownVehicles = brokenDownVehicles || v.getFaulty() > 0;
-      v.setCurrentSpeed(baseSpeed / reductionFactor);
-      v.advance();
-      temp.putValue(v.getLocation(), v);
+    if (vehicleList.sizeOfValues() > 0) {
+      final int baseSpeed = (int) Math.min(maxSpeed,
+          maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
+      boolean faultyVehicles = false;
+      MultiTreeMap<Integer, Vehicle> temp =
+          new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
+      for (Vehicle v : vehicleList.innerValues()) {
+        int reductionFactor = faultyVehicles ? 2 : 1;
+        faultyVehicles = faultyVehicles || v.getFaulty() > 0;
+        v.setCurrentSpeed(baseSpeed / reductionFactor);
+        v.advance();
+        temp.putValue(v.getLocation(), v);
+      }
+      vehicleList = temp;
     }
-    vehicleList = temp;
   }
 
   @Override
@@ -67,7 +69,7 @@ public class Road extends SimulatedObject {
     if (vehicleList.sizeOfValues() > 0) {
       StringBuilder stringBuilder = new StringBuilder();
       for (Vehicle v : vehicleList.innerValues()) {
-        stringBuilder.append("(" + v.id + "," + v.getLocation() + "),");
+        stringBuilder.append("(" + v + "," + v.getLocation() + "),");
       }
       kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
     } else {
@@ -78,11 +80,6 @@ public class Road extends SimulatedObject {
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
-  }
-
-  @Override
-  public String toString() {
-    return super.toString() + ": (" + sourceId + "," + destinationId + "," + length + ")";
   }
 
 }

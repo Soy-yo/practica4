@@ -1,6 +1,7 @@
 package es.ucm.fdi.model;
 
 import es.ucm.fdi.events.Event;
+import es.ucm.fdi.excepcions.SimulatorError;
 import es.ucm.fdi.ini.Ini;
 import es.ucm.fdi.ini.IniSection;
 import es.ucm.fdi.util.MultiTreeMap;
@@ -51,7 +52,7 @@ public class TrafficSimulator {
     }
   }
 
-  private void writeReport(Map<String, String> report, OutputStream out) {
+  private void writeReport(Map<String, String> report, OutputStream out) throws SimulatorError {
     Ini ini = new Ini();
     IniSection sec = new IniSection(report.get(""));
     report.remove("");
@@ -62,11 +63,11 @@ public class TrafficSimulator {
     try {
       ini.store(out);
     } catch (IOException e) {
-      // FIXME: no se que hacer aqui
+      throw new SimulatorError("Failed while storing data on ini file", e);
     }
   }
 
-  public void execute(int simulationSteps, OutputStream out) {
+  public void execute(int simulationSteps, OutputStream out) throws SimulatorError {
     int timeLimit = currentTime + simulationSteps - 1;
     while (currentTime <= timeLimit) {
       if (events.containsKey(currentTime)) {
@@ -74,7 +75,6 @@ public class TrafficSimulator {
           e.execute(this);
         }
       }
-      //System.out.println(roadMap);
       for (Road r : roadMap.getRoads()) {
         r.advance();
       }
@@ -84,13 +84,25 @@ public class TrafficSimulator {
       currentTime++;
       if (out != null) {
         for (Junction j : roadMap.getJunctions()) {
-          writeReport(j.generateReport(currentTime), out);
+          try {
+            writeReport(j.generateReport(currentTime), out);
+          } catch (SimulatorError e) {
+            throw new SimulatorError("Something went wrong while writing " + j + "'s report", e);
+          }
         }
         for (Road r : roadMap.getRoads()) {
-          writeReport(r.generateReport(currentTime), out);
+          try {
+            writeReport(r.generateReport(currentTime), out);
+          } catch (SimulatorError e) {
+            throw new SimulatorError("Something went wrong while writing " + r + "'s report", e);
+          }
         }
         for (Vehicle v : roadMap.getVehicles()) {
-          writeReport(v.generateReport(currentTime), out);
+          try {
+            writeReport(v.generateReport(currentTime), out);
+          } catch (SimulatorError e) {
+            throw new SimulatorError("Something went wrong while writing " + v + "'s report", e);
+          }
         }
       }
     }
