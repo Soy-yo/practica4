@@ -1,44 +1,36 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.Junction;
 import es.ucm.fdi.model.TrafficSimulator;
 import es.ucm.fdi.model.Vehicle;
-
-import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class NewVehicleEvent extends Event {
 
   private static final String SECTION_TAG_NAME = "new_vehicle";
 
-	private int maxSpeed;
-	private String[] itinerary;
+  private int maxSpeed;
+  private String[] itinerary;
 
   NewVehicleEvent(int time, String id, int maxSpeed, String[] itinerary) {
-		super(time, id);
-		this.maxSpeed = maxSpeed;
-		this.itinerary = itinerary;
-	}
+    super(time, id);
+    this.maxSpeed = maxSpeed;
+    this.itinerary = itinerary;
+  }
 
-	@Override
+  @Override
   public void execute(TrafficSimulator simulator) {
-    Queue<Junction> junctions = new ArrayDeque<>();
-    for (int i = 0; i < itinerary.length; i++) {
-      junctions.add(new Junction(itinerary[i]));
-    }
-    Vehicle vehicle = new Vehicle(id, maxSpeed, junctions);
+    Vehicle vehicle = new Vehicle(id, maxSpeed, simulator.getPath(itinerary));
     simulator.addSimulatedObject(vehicle);
   }
 
   static class Builder implements Event.Builder {
 
-		@Override
+    @Override
     public Event parse(IniSection section) {
 
-			if (!section.getTag().equals(SECTION_TAG_NAME)) {
-				return null;
-			}
+      if (!section.getTag().equals(SECTION_TAG_NAME)) {
+        return null;
+      }
 
       int time = parseInt(section, "time", 0, x -> x >= 0);
 
@@ -61,11 +53,11 @@ public class NewVehicleEvent extends Event {
       if (itinerary == null || itinerary.length < 2) {
         throw new IllegalArgumentException("Vehicle itinerary list must contain at least " +
             "2 junctions");
-			}
+      }
 
       return new NewVehicleEvent(time, id, maxSpeed, itinerary);
-		}
+    }
 
-	}
+  }
 
 }

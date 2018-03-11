@@ -1,7 +1,6 @@
 package es.ucm.fdi.model;
 
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 public class Vehicle extends SimulatedObject {
 
@@ -30,6 +29,10 @@ public class Vehicle extends SimulatedObject {
     this.faulty += faulty;
   }
 
+  public List<Junction> getItinerary() {
+    return Collections.unmodifiableList(new ArrayList<>(itinerary));
+  }
+
   @Override
   public void advance() {
     if (faulty > 0) {
@@ -38,8 +41,8 @@ public class Vehicle extends SimulatedObject {
       int newLocation = location + currentSpeed;
       if (newLocation >= road.getLength()) {
         newLocation = road.getLength();
-        Junction nextJ = itinerary.poll();
-        nextJ.vehicleIn(this);
+        Junction nextJunction = itinerary.peek();
+        nextJunction.vehicleIn(this);
       }
       kilometrage += newLocation - location;
       location = newLocation;
@@ -49,6 +52,9 @@ public class Vehicle extends SimulatedObject {
   public void moveToNextRoad() {
     if (road != null) {
       road.vehicleOut(this);
+    }
+    if (hasArrived) {
+      return;
     }
     String actual = itinerary.poll().getId();
     Junction next = itinerary.peek();
@@ -63,26 +69,32 @@ public class Vehicle extends SimulatedObject {
   public int getLocation() {
     return location;
   }
-  
+
   public Road getRoad() {
-		return road;
-	}
-  
+    return road;
+  }
+
   public void setCurrentSpeed(int currentSpeed) {
     this.currentSpeed = Math.min(currentSpeed, maxSpeed);
   }
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
-    kvps.put("speed", String.valueOf(currentSpeed));
-    kvps.put("kilometrage", String.valueOf(kilometrage));
-    kvps.put("faulty", String.valueOf(faulty));
-    kvps.put("location", "(" + road + "," + location + ")");
+    kvps.put("speed", "" + currentSpeed);
+    kvps.put("kilometrage", "" + kilometrage);
+    kvps.put("faulty", "" + faulty);
+    kvps.put("location", "(" + road.id + "," + location + ")");
   }
 
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ": (" + (road == null ? "?" : road.id) + "," + location + "," +
+        faulty + ")";
   }
 
 }

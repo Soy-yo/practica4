@@ -25,6 +25,10 @@ public class Junction extends SimulatedObject {
 
   @Override
   public void advance() {
+    if (enteringRoads.isEmpty()) {
+      //throw new IllegalStateException("Junction " + id + " has no entering roads");
+      return;
+    }
     // pone en verde el primer semáforo la primera vez o cada vuelta
     if (nextRoad == null || !nextRoad.hasNext()) {
       nextRoad = enteringRoads.keySet().iterator();
@@ -37,32 +41,36 @@ public class Junction extends SimulatedObject {
       vehicleList.poll();
     }
   }
-  
+
   public Road getStraightRoad(String previousJunction) {
-	  for(Road r : enteringRoads.keySet()) {
-		 if(r.getSource().equals(previousJunction)) {
-			 return r;
-		 }
-	  }
-	  return null;
+    for (Road r : enteringRoads.keySet()) {
+      if (r.getSource().equals(previousJunction)) {
+        return r;
+      }
+    }
+    return null;
   }
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
-      stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");
-      for (Vehicle v : e.getValue()) {
-        stringBuilder.append(v.id + ",");
+    if (!enteringRoads.isEmpty()) {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
+        stringBuilder.append("(" + e.getKey().id + "," + lightColor(e.getKey()) + ",[");
+        for (Vehicle v : e.getValue()) {
+          stringBuilder.append(v.id + ",");
+        }
+        if (!e.getValue().isEmpty()) {
+          stringBuilder.deleteCharAt(stringBuilder.length() - 1); // coma
+        }
+        stringBuilder.append("]),");
       }
-      if (!e.getValue().isEmpty()) {
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1); // coma
-      }
-      stringBuilder.append("]),");
+      kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
+    } else {
+      kvps.put("queues", "");
     }
-    kvps.put("queues", stringBuilder.substring(0, stringBuilder.length() - 1));
   }
-  
+
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
@@ -70,6 +78,11 @@ public class Junction extends SimulatedObject {
 
   private String lightColor(Road road) {
     return road.equals(currentRoadOn) ? "green" : "red";
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ": (" + (currentRoadOn == null ? "?" : currentRoadOn.id) + ")";
   }
 
 }

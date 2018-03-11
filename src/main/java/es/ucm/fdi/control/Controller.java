@@ -19,6 +19,7 @@ public class Controller {
     this.simulator = simulator;
   }
 
+  // TODO: implementar
   public void reset() {
     throw new UnsupportedOperationException("Not implemented yet");
   }

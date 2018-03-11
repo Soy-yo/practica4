@@ -45,7 +45,7 @@ public class NewRoadEvent extends Event {
         throw new IllegalArgumentException("id " + id + " is not a valid id");
       }
 
-      String src = section.getValue("sec");
+      String src = section.getValue("src");
       String dest = section.getValue("dest");
 
       int maxSpeed;

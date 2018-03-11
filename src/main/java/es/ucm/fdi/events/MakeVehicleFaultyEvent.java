@@ -5,19 +5,19 @@ import es.ucm.fdi.model.TrafficSimulator;
 
 public class MakeVehicleFaultyEvent extends Event {
 
-	private static final String SECTION_TAG_NAME = "make_vehicle_faulty";
+  private static final String SECTION_TAG_NAME = "make_vehicle_faulty";
 
-	private String[] vehicles;
-	private int duration;
+  private String[] vehicles;
+  private int duration;
 
-	// TODO: no hay ID
+  // TODO: no hay ID
   MakeVehicleFaultyEvent(int time, String id, String[] vehicles, int duration) {
-		super(time, id);
-		this.vehicles = vehicles;
-		this.duration = duration;
-	}
+    super(time, id);
+    this.vehicles = vehicles;
+    this.duration = duration;
+  }
 
-	@Override
+  @Override
   public void execute(TrafficSimulator simulator) {
     for (String id : vehicles) {
       simulator.makeVehicleFaulty(id, duration);
@@ -26,12 +26,12 @@ public class MakeVehicleFaultyEvent extends Event {
 
   static class Builder implements Event.Builder {
 
-		@Override
-		public Event parse(IniSection section) {
+    @Override
+    public Event parse(IniSection section) {
 
       if (!section.getTag().equals(SECTION_TAG_NAME)) {
-				return null;
-			}
+        return null;
+      }
 
       // TODO: no hay ID
       int time = parseInt(section, "time", 0, x -> x >= 0);
@@ -51,8 +51,8 @@ public class MakeVehicleFaultyEvent extends Event {
       }
 
       return new MakeVehicleFaultyEvent(time, "", vehicles, duration);
-		}
+    }
 
-	}
+  }
 
 }

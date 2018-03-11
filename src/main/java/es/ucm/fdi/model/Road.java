@@ -28,13 +28,13 @@ public class Road extends SimulatedObject {
   public int getLength() {
     return length;
   }
-  
+
   public String getSource() {
-		return sourceId;
-	}
-  
+    return sourceId;
+  }
+
   public String getDestiny() {
-	return destinationId;
+    return destinationId;
   }
 
   public void vehicleIn(Vehicle vehicle) {
@@ -70,12 +70,19 @@ public class Road extends SimulatedObject {
         stringBuilder.append("(" + v.id + "," + v.getLocation() + "),");
       }
       kvps.put("state", stringBuilder.substring(0, stringBuilder.length() - 1));
+    } else {
+      kvps.put("state", "");
     }
   }
 
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
+  }
+
+  @Override
+  public String toString() {
+    return super.toString() + ": (" + sourceId + "," + destinationId + "," + length + ")";
   }
 
 }
