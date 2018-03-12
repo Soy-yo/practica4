@@ -9,11 +9,11 @@ public class Road extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "road_report";
 
-  private int length;
-  private int maxSpeed;
-  private MultiTreeMap<Integer, Vehicle> vehicleList;
-  private String sourceId;
-  private String destinationId;
+  protected int length;
+  protected int maxSpeed;
+  protected MultiTreeMap<Integer, Vehicle> vehicleList;
+  protected String sourceId;
+  protected String destinationId;
 
 
   public Road(String id, int length, int maxSpeed, String sourceId, String destinationId) {
@@ -48,20 +48,30 @@ public class Road extends SimulatedObject {
   @Override
   public void advance() {
     if (vehicleList.sizeOfValues() > 0) {
-      final int baseSpeed = (int) Math.min(maxSpeed,
-          maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-      boolean faultyVehicles = false;
+      int baseSpeed = calculateBaseSpeed();
+      int faultyVehicles = 0;
       MultiTreeMap<Integer, Vehicle> temp =
           new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
       for (Vehicle v : vehicleList.innerValues()) {
-        int reductionFactor = faultyVehicles ? 2 : 1;
-        faultyVehicles = faultyVehicles || v.getFaulty() > 0;
+        int reductionFactor = calculateReductionFactor(faultyVehicles);
+        if (v.getFaulty() > 0) {
+          faultyVehicles++;
+        }
         v.setCurrentSpeed(baseSpeed / reductionFactor);
         v.advance();
         temp.putValue(v.getLocation(), v);
       }
       vehicleList = temp;
     }
+  }
+
+  protected int calculateBaseSpeed() {
+    return (int) Math.min(maxSpeed,
+        maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
+  }
+
+  protected int calculateReductionFactor(int faultyVehicles) {
+    return faultyVehicles > 0 ? 2 : 1;
   }
 
   @Override

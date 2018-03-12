@@ -6,7 +6,7 @@ import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewRoadEvent extends Event {
 
-  private static final String SECTION_TAG_NAME = "new_road";
+  protected static final String SECTION_TAG_NAME = "new_road";
 
   private String sourceId;
   private String destinationId;
