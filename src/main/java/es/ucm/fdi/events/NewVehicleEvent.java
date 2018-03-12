@@ -6,10 +6,10 @@ import es.ucm.fdi.model.Vehicle;
 
 public class NewVehicleEvent extends Event {
 
-  private static final String SECTION_TAG_NAME = "new_vehicle";
+  protected static final String SECTION_TAG_NAME = "new_vehicle";
 
-  private int maxSpeed;
-  private String[] itinerary;
+  protected int maxSpeed;
+  protected String[] itinerary;
 
   NewVehicleEvent(int time, String id, int maxSpeed, String[] itinerary) {
     super(time, id);

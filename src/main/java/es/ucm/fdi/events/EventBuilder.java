@@ -5,6 +5,7 @@ import es.ucm.fdi.ini.IniSection;
 public class EventBuilder {
 
   private static final Event.Builder[] SUPPORTED_EVENTS = {
+	  new NewCarEvent.Builder(),
       new NewVehicleEvent.Builder(),
       new NewRoadEvent.Builder(),
       new NewJunctionEvent.Builder(),
