@@ -6,6 +6,7 @@ public class EventBuilder {
 
   private static final Event.Builder[] SUPPORTED_EVENTS = {
 	  new NewCarEvent.Builder(),
+	  new NewBicycleEvent.Builder(),
       new NewVehicleEvent.Builder(),
       new NewRoadEvent.Builder(),
       new NewJunctionEvent.Builder(),

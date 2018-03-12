@@ -1,9 +1,12 @@
 package es.ucm.fdi.model;
 
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
 public class Car extends Vehicle {
+	
+	public static final String TYPE = "car";
 
 	private int resistance;
 	private int traveled;
@@ -20,7 +23,6 @@ public class Car extends Vehicle {
 		this.maxFaultDuration = maxFaultDuration;
 		randomNumber = new Random(seed);
 		traveled = 0;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -35,4 +37,10 @@ public class Car extends Vehicle {
 			traveled += kilometrage - advanced;
 		}
 	}
+	
+	@Override
+	public void fillReportDetails(Map<String, String> kvps) {
+	    kvps.put("type", "" + TYPE);
+	    super.fillReportDetails(kvps);
+	  }
 }

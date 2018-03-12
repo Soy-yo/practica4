@@ -6,8 +6,6 @@ import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewCarEvent extends NewVehicleEvent {
 
-	private static final String TYPE = "car";
-
 	private int resistance;
 	private double faultProbability;
 	private int maxFaultDuration;
@@ -36,7 +34,7 @@ public class NewCarEvent extends NewVehicleEvent {
 		public Event parse(IniSection section) {
 
 			if (!section.getTag().equals(SECTION_TAG_NAME)
-					|| !TYPE.equals(section.getValue("type"))) {
+					|| !Car.TYPE.equals(section.getValue("type"))) {
 				return null;
 			}
 
@@ -50,7 +48,7 @@ public class NewCarEvent extends NewVehicleEvent {
 
 			int maxSpeed;
 			try {
-				maxSpeed = getIntValue("resistance", section);
+				maxSpeed = getIntValue("max_speed", section);
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException(
 						"Vehicle max speed must be a positive number");
