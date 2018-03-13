@@ -6,10 +6,10 @@ import es.ucm.fdi.model.Vehicle;
 
 public class NewVehicleEvent extends Event {
 
-  private static final String SECTION_TAG_NAME = "new_vehicle";
+  protected static final String SECTION_TAG_NAME = "new_vehicle";
 
-  private int maxSpeed;
-  private String[] itinerary;
+  protected int maxSpeed;
+  protected String[] itinerary;
 
   NewVehicleEvent(int time, String id, int maxSpeed, String[] itinerary) {
     super(time, id);
@@ -41,13 +41,11 @@ public class NewVehicleEvent extends Event {
 
       int maxSpeed;
       try {
-        maxSpeed = Integer.parseInt(section.getValue("max_speed"));
-        if (maxSpeed <= 0) {
-          throw new IllegalArgumentException("Vehicle max speed must be positive");
-        }
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Vehicle max speed must be a number", e);
-      }
+			maxSpeed = getIntValue("max_speed", section);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"Vehicle max speed must be a positive number");
+		}
 
       String[] itinerary = parseIdList(section, "itinerary");
       if (itinerary == null || itinerary.length < 2) {

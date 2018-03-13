@@ -6,15 +6,15 @@ public class Vehicle extends SimulatedObject {
 
   private static final String SECTION_TAG_NAME = "vehicle_report";
 
-  private int maxSpeed;
-  private int currentSpeed;
+  protected int maxSpeed;
+  protected int currentSpeed;
   private Road road;
   private int location;
   private Queue<Junction> itinerary;
-  private int faulty;
+  protected int faulty;
   private boolean hasArrived;
   private boolean inJunction;
-  private int kilometrage;
+  protected int kilometrage;
 
   public Vehicle(String id, int maxSpeed, Queue<Junction> itinerary) {
     super(id);
