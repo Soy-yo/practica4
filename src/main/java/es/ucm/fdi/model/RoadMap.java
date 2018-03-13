@@ -106,7 +106,7 @@ public class RoadMap {
     return Collections.unmodifiableList(new ArrayList<>(junctions.values()));
   }
 
-  protected Queue<Junction> getPath(String[] path) {
+  public Queue<Junction> getPath(String[] path) {
     Queue<Junction> result = new ArrayDeque<>();
     String previousJunctionId = null;
     for (String id : path) {

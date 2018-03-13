@@ -3,7 +3,7 @@ package es.ucm.fdi.model;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Queue;
 
@@ -29,7 +29,7 @@ class JunctionTest {
     vehicle.moveToNextRoad();
     road1.advance();
 
-    Map<String, String> correct = new HashMap<>();
+    Map<String, String> correct = new LinkedHashMap<>();
     correct.put("", "junction_report");
     correct.put("id", "jt2");
     correct.put("time", String.valueOf(1));
@@ -39,9 +39,10 @@ class JunctionTest {
 
     assertEquals(correct, result);
 
+    mid.advance(); // red -> green
     mid.advance();
 
-    correct = new HashMap<>();
+    correct = new LinkedHashMap<>();
     correct.put("", "junction_report");
     correct.put("id", "jt2");
     correct.put("time", String.valueOf(1));
@@ -74,7 +75,7 @@ class JunctionTest {
     dest.vehicleIn(vehicle1);
     dest.vehicleIn(vehicle2);
 
-    Map<String, String> correct = new HashMap<>();
+    Map<String, String> correct = new LinkedHashMap<>();
     correct.put("", "junction_report");
     correct.put("id", "jt2");
     correct.put("time", String.valueOf(1));

@@ -70,7 +70,7 @@ class VehicleTest {
   }
 
   @Test
-  void brokenDown() {
+  void faultyVehicle() {
     Junction source = new Junction("jt1");
     Junction dest = new Junction("jt2");
     Queue<Junction> queue = new ArrayDeque<>();
@@ -82,12 +82,21 @@ class VehicleTest {
 
     Vehicle vehicle = new Vehicle("vt1", 20, queue);
     vehicle.moveToNextRoad();
+
     vehicle.setCurrentSpeed(20);
     vehicle.setFaulty(2);
     vehicle.advance();
-    vehicle.advance();
+
     assertEquals(0, vehicle.getLocation());
+
+    vehicle.setCurrentSpeed(20);
     vehicle.advance();
+
+    assertEquals(0, vehicle.getLocation());
+
+    vehicle.setCurrentSpeed(20);
+    vehicle.advance();
+
     assertEquals(20, vehicle.getLocation());
   }
 

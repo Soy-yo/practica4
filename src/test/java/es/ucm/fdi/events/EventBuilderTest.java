@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,6 +20,11 @@ class EventBuilderTest {
     @Override
     public void addSimulatedObject(SimulatedObject o) {
       roadMapTest.addSimulatedObject(o);
+    }
+
+    @Override
+    public Queue<Junction> getPath(String[] path) {
+      return roadMapTest.getPath(path);
     }
 
     List<Vehicle> getVehicles() {
@@ -40,8 +46,10 @@ class EventBuilderTest {
     TestSimulator simulator = new TestSimulator();
     Junction j1 = new Junction("jt1");
     Junction j2 = new Junction("jt2");
+    Road r = new Road("rt1", 10, 10, "jt1", "jt2");
     simulator.addSimulatedObject(j1);
     simulator.addSimulatedObject(j2);
+    simulator.addSimulatedObject(r);
     List<Junction> junctions = new ArrayList<>();
     junctions.add(j1);
     junctions.add(j2);
