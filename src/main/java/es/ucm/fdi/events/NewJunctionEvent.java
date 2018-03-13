@@ -6,7 +6,7 @@ import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewJunctionEvent extends Event {
 
-  private static final String SECTION_TAG_NAME = "new_junction";
+  protected static final String SECTION_TAG_NAME = "new_junction";
 
   NewJunctionEvent(int time, String id) {
     super(time, id);

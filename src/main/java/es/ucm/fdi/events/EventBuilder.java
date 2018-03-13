@@ -8,7 +8,11 @@ public class EventBuilder {
 	  new NewCarEvent.Builder(),
 	  new NewBicycleEvent.Builder(),
       new NewVehicleEvent.Builder(),
+      new NewLaneRoadEvent.Builder(),
+      new NewDirtRoadEvent.Builder(),
       new NewRoadEvent.Builder(),
+      new NewRoundRobinJunctionEvent.Builder(),
+      new NewMostCrowdedJunctionEvent.Builder(),
       new NewJunctionEvent.Builder(),
       new MakeVehicleFaultyEvent.Builder()
   };
