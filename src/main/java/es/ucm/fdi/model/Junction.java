@@ -37,7 +37,7 @@ public class Junction extends SimulatedObject {
     }
   }
 
-  private void switchLights() {
+  protected void switchLights() {
     // pone en verde el primer semáforo la primera vez o cada vuelta
     if (nextRoad == null || !nextRoad.hasNext()) {
       nextRoad = enteringRoads.keySet().iterator();
