@@ -8,10 +8,10 @@ public class NewRoadEvent extends Event {
 
   protected static final String SECTION_TAG_NAME = "new_road";
 
-  private String sourceId;
-  private String destinationId;
-  private int maxSpeed;
-  private int length;
+  protected String sourceId;
+  protected String destinationId;
+  protected int maxSpeed;
+  protected int length;
 
   NewRoadEvent(int time, String id, String sourceId, String destinationId, int maxSpeed,
                int length) {
@@ -43,19 +43,18 @@ public class NewRoadEvent extends Event {
       if (!isValid(id)) {
         throw new IllegalArgumentException("id " + id + " is not a valid id");
       }
-
+      
+      //TODO: trycatch(?) (mirar tambien en las subclases) Edu
       String src = section.getValue("src");
       String dest = section.getValue("dest");
 
       int maxSpeed;
-      try {
-        maxSpeed = Integer.parseInt(section.getValue("max_speed"));
-        if (maxSpeed <= 0) {
-          throw new IllegalArgumentException("Road max speed must be positive");
-        }
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Road max speed must be a number", e);
-      }
+		try {
+			maxSpeed = getIntValue("max_speed", section);
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(
+					"Road max speed must be a positive number");
+		}
 
       int length;
       try {
