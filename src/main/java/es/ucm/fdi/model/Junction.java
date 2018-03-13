@@ -6,47 +6,92 @@ public class Junction extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "junction_report";
 
-  private Map<Road, Queue<Vehicle>> enteringRoads;
-  private Road currentRoadOn;
-  private Iterator<Road> nextRoad;
+  protected class IncomingRoad {
+
+    Queue<Vehicle> vehicleList;
+    boolean greenLight;
+
+    public IncomingRoad() {
+      this.vehicleList = new ArrayDeque<>();
+      greenLight = false;
+    }
+
+    void vehicleIn(Vehicle vehicle) {
+      vehicleList.add(vehicle);
+    }
+
+    void vehicleOut() {
+      Vehicle vehicle = vehicleList.poll();
+      vehicle.moveToNextRoad();
+    }
+
+    int vehicleCount() {
+      return vehicleList.size();
+    }
+
+    boolean isEmpty() {
+      return vehicleList.size() == 0;
+    }
+
+    void switchLight() {
+      greenLight = !greenLight;
+    }
+
+    String lightColor() {
+      return greenLight ? "green" : "red";
+    }
+
+    Iterable<Vehicle> vehicles() {
+      return () -> vehicleList.iterator();
+    }
+
+  }
+
+  protected Map<Road, IncomingRoad> incomingRoads;
+  protected IncomingRoad currentRoadOn;
+  protected Iterator<IncomingRoad> nextRoad;
 
   public Junction(String id) {
     super(id);
-    enteringRoads = new LinkedHashMap<>();
+    incomingRoads = new LinkedHashMap<>();
   }
 
   public void addRoad(Road road) {
-    enteringRoads.put(road, new ArrayDeque<>());
+    incomingRoads.put(road, new IncomingRoad());
   }
 
   public void vehicleIn(Vehicle vehicle) {
-    enteringRoads.get(vehicle.getRoad()).add(vehicle);
+    incomingRoads.get(vehicle.getRoad()).vehicleIn(vehicle);
   }
 
   @Override
   public void advance() {
-    if (!enteringRoads.isEmpty()) {
-      if (currentRoadOn != null) {
-        Queue<Vehicle> vehicleList = enteringRoads.get(currentRoadOn);
-        if (!vehicleList.isEmpty()) {
-          Vehicle vehicle = vehicleList.poll();
-          vehicle.moveToNextRoad();
-        }
+    if (!incomingRoads.isEmpty()) {
+      if (currentRoadOn != null && !currentRoadOn.isEmpty()) {
+        currentRoadOn.vehicleOut();
       }
       switchLights();
     }
   }
 
   protected void switchLights() {
-    // pone en verde el primer semáforo la primera vez o cada vuelta
-    if (nextRoad == null || !nextRoad.hasNext()) {
-      nextRoad = enteringRoads.keySet().iterator();
+    IncomingRoad previous = currentRoadOn;
+    currentRoadOn = getNextRoad();
+    if (previous != null) {
+      previous.switchLight();
     }
-    currentRoadOn = nextRoad.next();
+    currentRoadOn.switchLight();
+  }
+
+  protected IncomingRoad getNextRoad() {
+    if (nextRoad == null || !nextRoad.hasNext()) {
+      nextRoad = incomingRoads.values().iterator();
+    }
+    return nextRoad.next();
   }
 
   public Road getStraightRoad(String previousJunction) {
-    for (Road r : enteringRoads.keySet()) {
+    for (Road r : incomingRoads.keySet()) {
       if (r.getSource().equals(previousJunction)) {
         return r;
       }
@@ -56,11 +101,11 @@ public class Junction extends SimulatedObject {
 
   @Override
   public void fillReportDetails(Map<String, String> kvps) {
-    if (!enteringRoads.isEmpty()) {
+    if (!incomingRoads.isEmpty()) {
       StringBuilder stringBuilder = new StringBuilder();
-      for (Map.Entry<Road, Queue<Vehicle>> e : enteringRoads.entrySet()) {
-        stringBuilder.append("(" + e.getKey() + "," + lightColor(e.getKey()) + ",[");
-        for (Vehicle v : e.getValue()) {
+      for (Map.Entry<Road, IncomingRoad> e : incomingRoads.entrySet()) {
+        stringBuilder.append("(" + e.getKey() + "," + e.getValue().lightColor() + ",[");
+        for (Vehicle v : e.getValue().vehicles()) {
           stringBuilder.append(v + ",");
         }
         if (!e.getValue().isEmpty()) {
@@ -77,10 +122,6 @@ public class Junction extends SimulatedObject {
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
-  }
-
-  private String lightColor(Road road) {
-    return road.equals(currentRoadOn) ? "green" : "red";
   }
 
 }

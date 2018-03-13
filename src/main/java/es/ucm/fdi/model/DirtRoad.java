@@ -9,8 +9,13 @@ public class DirtRoad extends Road {
   }
 
   @Override
-  public void advance() {
-    advance(maxSpeed, x -> x + 1);
+  protected int calculateBaseSpeed() {
+    return maxSpeed;
+  }
+
+  @Override
+  protected int calculateReductionFactor(int faultyVehicles) {
+    return faultyVehicles + 1;
   }
 
   @Override

@@ -13,10 +13,14 @@ public class LaneRoad extends Road {
   }
 
   @Override
-  public void advance() {
-    int baseSpeed = (int) Math.min(maxSpeed,
+  protected int calculateBaseSpeed() {
+    return (int) Math.min(maxSpeed,
         maxSpeed * lanes / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-    advance(baseSpeed, x -> x >= lanes ? 2 : 1);
+  }
+
+  @Override
+  protected int calculateReductionFactor(int faultyVehicles) {
+    return faultyVehicles >= lanes ? 2 : 1;
   }
 
   @Override

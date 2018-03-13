@@ -4,17 +4,16 @@ import es.ucm.fdi.util.MultiTreeMap;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.function.IntFunction;
 
 public class Road extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "road_report";
 
-  private int length;
+  protected int length;
   protected int maxSpeed;
   protected MultiTreeMap<Integer, Vehicle> vehicleList;
-  private String sourceId;
-  private String destinationId;
+  protected String sourceId;
+  protected String destinationId;
 
 
   public Road(String id, int length, int maxSpeed, String sourceId, String destinationId) {
@@ -48,18 +47,13 @@ public class Road extends SimulatedObject {
 
   @Override
   public void advance() {
-    int baseSpeed = (int) Math.min(maxSpeed,
-        maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
-    advance(baseSpeed, x -> x > 0 ? 2 : 1);
-  }
-
-  protected void advance(int baseSpeed, IntFunction<Integer> reductionFactorFunction) {
     if (vehicleList.sizeOfValues() > 0) {
+      int baseSpeed = calculateBaseSpeed();
       int faultyVehicles = 0;
       MultiTreeMap<Integer, Vehicle> temp =
           new MultiTreeMap<>(Comparator.comparing(Integer::intValue).reversed());
       for (Vehicle v : vehicleList.innerValues()) {
-        int reductionFactor = reductionFactorFunction.apply(faultyVehicles);
+        int reductionFactor = calculateReductionFactor(faultyVehicles);
         if (v.getFaulty() > 0) {
           faultyVehicles++;
         }
@@ -69,7 +63,15 @@ public class Road extends SimulatedObject {
       }
       vehicleList = temp;
     }
+  }
 
+  protected int calculateBaseSpeed() {
+    return (int) Math.min(maxSpeed,
+        maxSpeed / Math.max(vehicleList.sizeOfValues(), 1) + 1);
+  }
+
+  protected int calculateReductionFactor(int faultyVehicles) {
+    return faultyVehicles > 0 ? 2 : 1;
   }
 
   @Override
