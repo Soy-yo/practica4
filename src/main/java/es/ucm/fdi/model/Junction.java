@@ -8,6 +8,7 @@ public class Junction extends SimulatedObject {
   protected Map<Road, IncomingRoad> incomingRoads;
   protected IncomingRoad currentRoadOn;
   protected Iterator<IncomingRoad> nextRoad;
+
   public Junction(String id) {
     super(id);
     incomingRoads = new LinkedHashMap<>();

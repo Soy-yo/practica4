@@ -5,6 +5,7 @@ public abstract class JunctionWithTimeSlice extends Junction {
   protected int timeLapse;
   protected int timeUnits;
   protected int timesUsed;
+
   public JunctionWithTimeSlice(String id, int timeLapse) {
     super(id);
     this.timeLapse = timeLapse;
