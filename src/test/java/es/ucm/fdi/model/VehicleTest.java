@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VehicleTest {
 
@@ -98,6 +99,63 @@ class VehicleTest {
     vehicle.advance();
 
     assertEquals(20, vehicle.getLocation());
+  }
+
+  @Test
+  void bikeTest() {
+    Junction source = new Junction("jt1");
+    Junction dest = new Junction("jt2");
+    Queue<Junction> queue = new ArrayDeque<>();
+    queue.add(source);
+    queue.add(dest);
+
+    Road r = new Road("rt1", 50, 50, "jt1", "jt2");
+    dest.addRoad(r);
+
+    Vehicle bike = new Bicycle("vt1", 20, queue);
+    bike.moveToNextRoad();
+
+    bike.setCurrentSpeed(10);
+    bike.setFaulty(10);
+
+    assertTrue(bike.getFaulty() == 0);
+
+    bike.setCurrentSpeed(11);
+    bike.setFaulty(10);
+
+    assertTrue(bike.getFaulty() > 0);
+  }
+
+  @Test
+  void carTest() {
+    Junction source = new Junction("jt1");
+    Junction dest = new Junction("jt2");
+    Queue<Junction> queue = new ArrayDeque<>();
+    queue.add(source);
+    queue.add(dest);
+
+    Road r = new Road("rt1", 200, 50, "jt1", "jt2");
+    dest.addRoad(r);
+
+    Vehicle car1 = new Car("vt1", 20, queue, 5, 1.0, 3, 0L);
+    Vehicle car2 = new Car("vt2", 20, new ArrayDeque<>(queue), 5, .5, 3, 0L);
+    car1.moveToNextRoad();
+    car2.moveToNextRoad();
+
+    r.advance();
+
+    assertTrue(car1.getFaulty() == 0);
+    assertTrue(car2.getFaulty() == 0);
+
+    r.advance();
+
+    assertTrue(car1.getFaulty() > 0);
+    assertTrue(car2.getFaulty() == 0);
+
+    r.advance();
+
+    assertTrue(car1.getFaulty() == 0);
+    assertTrue(car2.getFaulty() > 0);
   }
 
 }

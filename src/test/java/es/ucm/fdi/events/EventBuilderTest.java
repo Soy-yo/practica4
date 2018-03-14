@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EventBuilderTest {
 
@@ -39,6 +38,58 @@ class EventBuilderTest {
 
     assertEquals(simulator.getJunctions(), junctions);
     assertEquals(simulator.getVehicles().get(0).getId(), "vt1");
+  }
+
+  @Test
+  void unknownEvent() {
+    IniSection section = new IniSection("unknown_tag");
+    section.setValue("id", "some_id");
+    assertNull(EventBuilder.parse(section));
+  }
+
+  @Test
+  void wrongIds() {
+    IniSection section = new IniSection("new_vehicle");
+    section.setValue("id", "");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+    section.setValue("id", "hello world");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+    section.setValue("id", "hello-world");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+  }
+
+  @Test
+  void wrongType() {
+    IniSection section = new IniSection("new_vehicle");
+    section.setValue("time", "0");
+    section.setValue("id", "vehicle");
+    section.setValue("itinerary", "j1,j2");
+    section.setValue("max_speed", "20000");
+    section.setValue("type", "spaceship");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+  }
+
+  @Test
+  void wrongTime() {
+    IniSection section = new IniSection("new_junction");
+    section.setValue("time", "-1");
+    section.setValue("id", "j");
+    Event event = EventBuilder.parse(section);
+    assertEquals(event.time, 0);
+    section.setValue("time", "hello world");
+    assertEquals(event.time, 0);
+  }
+
+  @Test
+  void wrongItinerary() {
+    IniSection section = new IniSection("new_vehicle");
+    section.setValue("time", "0");
+    section.setValue("id", "vehicle");
+    section.setValue("itinerary", "");
+    section.setValue("max_speed", "20");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+    section.setValue("itinerary", "");
+    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
   }
 
   private class TestSimulator extends TrafficSimulator {

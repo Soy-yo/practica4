@@ -1,6 +1,6 @@
 package es.ucm.fdi.excepcions;
 
-public class SimulatorError extends Exception {
+public class SimulatorError extends RuntimeException {
 
   public SimulatorError() {
   }
