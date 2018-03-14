@@ -8,13 +8,13 @@ public class Vehicle extends SimulatedObject {
 
   protected int maxSpeed;
   protected int currentSpeed;
+  protected int faulty;
+  protected int kilometrage;
   private Road road;
   private int location;
   private Queue<Junction> itinerary;
-  protected int faulty;
   private boolean hasArrived;
   private boolean inJunction;
-  protected int kilometrage;
 
   public Vehicle(String id, int maxSpeed, Queue<Junction> itinerary) {
     super(id);

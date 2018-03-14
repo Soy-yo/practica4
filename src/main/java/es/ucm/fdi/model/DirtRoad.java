@@ -4,27 +4,27 @@ import java.util.Map;
 
 public class DirtRoad extends Road {
 
-	public static final String TYPE = "dirt";
-	
-	public DirtRoad(String id, int length, int maxSpeed, String sourceId,
-			String destinationId) {
-		super(id, length, maxSpeed, sourceId, destinationId);
-	}
+  public static final String TYPE = "dirt";
 
-	@Override
-	protected int calculateBaseSpeed() {
-		return maxSpeed;
-	}
+  public DirtRoad(String id, int length, int maxSpeed, String sourceId,
+                  String destinationId) {
+    super(id, length, maxSpeed, sourceId, destinationId);
+  }
 
-	@Override
-	protected int calculateReductionFactor(int faultyVehicles) {
-		return faultyVehicles + 1;
-	}
+  @Override
+  protected int calculateBaseSpeed() {
+    return maxSpeed;
+  }
 
-	@Override
-	public void fillReportDetails(Map<String, String> kvps) {
-		kvps.put("type", TYPE);
-		super.fillReportDetails(kvps);
-	}
+  @Override
+  protected int calculateReductionFactor(int faultyVehicles) {
+    return faultyVehicles + 1;
+  }
+
+  @Override
+  public void fillReportDetails(Map<String, String> kvps) {
+    kvps.put("type", TYPE);
+    super.fillReportDetails(kvps);
+  }
 
 }

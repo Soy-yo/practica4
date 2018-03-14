@@ -32,7 +32,7 @@ public class NewVehicleEvent extends Event {
         return null;
       }
 
-      int time = parseInt(section, "time", 0, x -> x >= 0);
+      int time = parsePositiveInt(section, "time", 0);
 
       String id = section.getValue("id");
       if (!isValid(id)) {
@@ -41,11 +41,11 @@ public class NewVehicleEvent extends Event {
 
       int maxSpeed;
       try {
-			maxSpeed = getIntValue("max_speed", section);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(
-					"Vehicle max speed must be a positive number");
-		}
+        maxSpeed = getIntValue("max_speed", section);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Vehicle max speed must be a positive number");
+      }
 
       String[] itinerary = parseIdList(section, "itinerary");
       if (itinerary == null || itinerary.length < 2) {

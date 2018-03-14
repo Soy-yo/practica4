@@ -32,7 +32,7 @@ public class MakeVehicleFaultyEvent extends Event {
         return null;
       }
 
-      int time = parseInt(section, "time", 0, x -> x >= 0);
+      int time = parsePositiveInt(section, "time", 0);
 
       String[] vehicles = parseIdList(section, "vehicles");
 

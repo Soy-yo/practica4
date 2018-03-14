@@ -5,52 +5,9 @@ import java.util.*;
 public class Junction extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "junction_report";
-
-  protected class IncomingRoad {
-
-    Queue<Vehicle> vehicleList;
-    boolean greenLight;
-
-    public IncomingRoad() {
-      this.vehicleList = new ArrayDeque<>();
-      greenLight = false;
-    }
-
-    void vehicleIn(Vehicle vehicle) {
-      vehicleList.add(vehicle);
-    }
-
-    void vehicleOut() {
-      Vehicle vehicle = vehicleList.poll();
-      vehicle.moveToNextRoad();
-    }
-
-    int vehicleCount() {
-      return vehicleList.size();
-    }
-
-    boolean isEmpty() {
-      return vehicleList.size() == 0;
-    }
-
-    void switchLight() {
-      greenLight = !greenLight;
-    }
-
-    String lightColor() {
-      return greenLight ? "green" : "red";
-    }
-
-    Iterable<Vehicle> vehicles() {
-      return () -> vehicleList.iterator();
-    }
-
-  }
-
   protected Map<Road, IncomingRoad> incomingRoads;
   protected IncomingRoad currentRoadOn;
   protected Iterator<IncomingRoad> nextRoad;
-
   public Junction(String id) {
     super(id);
     incomingRoads = new LinkedHashMap<>();
@@ -122,6 +79,47 @@ public class Junction extends SimulatedObject {
   @Override
   protected String getReportHeader() {
     return SECTION_TAG_NAME;
+  }
+
+  protected class IncomingRoad {
+
+    Queue<Vehicle> vehicleList;
+    boolean greenLight;
+
+    public IncomingRoad() {
+      this.vehicleList = new ArrayDeque<>();
+      greenLight = false;
+    }
+
+    void vehicleIn(Vehicle vehicle) {
+      vehicleList.add(vehicle);
+    }
+
+    void vehicleOut() {
+      Vehicle vehicle = vehicleList.poll();
+      vehicle.moveToNextRoad();
+    }
+
+    int vehicleCount() {
+      return vehicleList.size();
+    }
+
+    boolean isEmpty() {
+      return vehicleList.size() == 0;
+    }
+
+    void switchLight() {
+      greenLight = !greenLight;
+    }
+
+    String lightColor() {
+      return greenLight ? "green" : "red";
+    }
+
+    Iterable<Vehicle> vehicles() {
+      return () -> vehicleList.iterator();
+    }
+
   }
 
 }

@@ -13,34 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class EventBuilderTest {
 
-  private class TestSimulator extends TrafficSimulator {
-
-    RoadMap roadMapTest = new RoadMap();
-
-    @Override
-    public void addSimulatedObject(SimulatedObject o) {
-      roadMapTest.addSimulatedObject(o);
-    }
-
-    @Override
-    public Queue<Junction> getPath(String[] path) {
-      return roadMapTest.getPath(path);
-    }
-
-    List<Vehicle> getVehicles() {
-      return roadMapTest.getVehicles();
-    }
-
-    List<Road> getRoads() {
-      return roadMapTest.getRoads();
-    }
-
-    List<Junction> getJunctions() {
-      return roadMapTest.getJunctions();
-    }
-
-  }
-
   @Test
   void simpleVehicleEvent() {
     TestSimulator simulator = new TestSimulator();
@@ -67,6 +39,34 @@ class EventBuilderTest {
 
     assertEquals(simulator.getJunctions(), junctions);
     assertEquals(simulator.getVehicles().get(0).getId(), "vt1");
+  }
+
+  private class TestSimulator extends TrafficSimulator {
+
+    RoadMap roadMapTest = new RoadMap();
+
+    @Override
+    public void addSimulatedObject(SimulatedObject o) {
+      roadMapTest.addSimulatedObject(o);
+    }
+
+    @Override
+    public Queue<Junction> getPath(String[] path) {
+      return roadMapTest.getPath(path);
+    }
+
+    List<Vehicle> getVehicles() {
+      return roadMapTest.getVehicles();
+    }
+
+    List<Road> getRoads() {
+      return roadMapTest.getRoads();
+    }
+
+    List<Junction> getJunctions() {
+      return roadMapTest.getJunctions();
+    }
+
   }
 
 }

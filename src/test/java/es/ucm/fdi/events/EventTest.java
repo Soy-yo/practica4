@@ -8,13 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 class EventTest {
 
-  private class Implementation implements Event.Builder {
-    @Override
-    public Event parse(IniSection section) {
-      throw new UnsupportedOperationException("Nothing to do");
-    }
-  }
-
   private Event.Builder eb = new Implementation();
 
   @Test
@@ -58,6 +51,13 @@ class EventTest {
   @Test
   void validIdTest8() {
     assertTrue(eb.isValid("vehicle"));
+  }
+
+  private class Implementation implements Event.Builder {
+    @Override
+    public Event parse(IniSection section) {
+      throw new UnsupportedOperationException("Nothing to do");
+    }
   }
 
 }

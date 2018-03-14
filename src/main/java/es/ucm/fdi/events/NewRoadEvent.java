@@ -37,24 +37,24 @@ public class NewRoadEvent extends Event {
         return null;
       }
 
-      int time = parseInt(section, "time", 0, x -> x >= 0);
+      int time = parsePositiveInt(section, "time", 0);
 
       String id = section.getValue("id");
       if (!isValid(id)) {
         throw new IllegalArgumentException("id " + id + " is not a valid id");
       }
-      
+
       //TODO: trycatch(?) (mirar tambien en las subclases) Edu
       String src = section.getValue("src");
       String dest = section.getValue("dest");
 
       int maxSpeed;
-		try {
-			maxSpeed = getIntValue("max_speed", section);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException(
-					"Road max speed must be a positive number");
-		}
+      try {
+        maxSpeed = getIntValue("max_speed", section);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Road max speed must be a positive number");
+      }
 
       int length;
       try {

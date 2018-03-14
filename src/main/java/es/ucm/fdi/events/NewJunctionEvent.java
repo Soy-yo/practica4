@@ -27,7 +27,7 @@ public class NewJunctionEvent extends Event {
         return null;
       }
 
-      int time = parseInt(section, "time", 0, x -> x >= 0);
+      int time = parsePositiveInt(section, "time", 0);
 
       String id = section.getValue("id");
       if (!isValid(id)) {
