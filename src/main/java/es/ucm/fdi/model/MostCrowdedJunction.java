@@ -30,6 +30,7 @@ public class MostCrowdedJunction extends JunctionWithTimeSlice {
     IncomingRoad mostCrowded = road;
     if (currentRoadOn == null) {
       currentRoadOn = road;
+      road = (IncomingRoad) getNextRoad();
     }
     while (road != currentRoadOn) {
       if (road.vehicleCount() > mostCrowded.vehicleCount()) {

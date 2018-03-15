@@ -9,7 +9,7 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
   private int maxTimeSlice;
   private int minTimeSlice;
 
-  public RoundRobinJunction(String id, int maxTimeSlice, int minTimeSlice) {
+  public RoundRobinJunction(String id, int minTimeSlice, int maxTimeSlice) {
     super(id, maxTimeSlice);
     this.minTimeSlice = minTimeSlice;
     this.maxTimeSlice = maxTimeSlice;
@@ -17,16 +17,16 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
 
   @Override
   protected void switchLights() {
-    if (timeUnits == timeLapse - 1) {
+    if (currentRoadOn == null) {
       super.switchLights();
+    } else if (timeUnits == timeLapse - 1) {
       if (timesUsed == 0) {
         timeLapse = Math.max(timeLapse - 1, minTimeSlice);
       } else if (timesUsed == timeUnits) {
         timeLapse = Math.min(timeLapse + 1, maxTimeSlice);
       }
-      timeUnits = 0;
-    } else if (currentRoadOn == null) {
       super.switchLights();
+      timeUnits = 0;
     } else {
       timeUnits++;
     }

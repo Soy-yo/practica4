@@ -62,7 +62,7 @@ class VehicleTest {
     Map<String, String> correct = new HashMap<>();
     correct.put("", "junction_report");
     correct.put("id", "jt2");
-    correct.put("time", String.valueOf(1));
+    correct.put("time", "1");
     correct.put("queues", "(rt1,red,[vt2])");
 
     Map<String, String> result = dest.generateReport(1);

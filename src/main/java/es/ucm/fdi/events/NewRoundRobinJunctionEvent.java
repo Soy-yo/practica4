@@ -9,8 +9,7 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
   private int maxTimeSlice;
   private int minTimeSlice;
 
-  NewRoundRobinJunctionEvent(int time, String id, int maxTimeSlice,
-                             int minTimeSlice) {
+  NewRoundRobinJunctionEvent(int time, String id, int minTimeSlice, int maxTimeSlice) {
     super(time, id);
     this.maxTimeSlice = maxTimeSlice;
     this.minTimeSlice = minTimeSlice;
@@ -19,7 +18,7 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
   @Override
   public void execute(TrafficSimulator simulator) {
     RoundRobinJunction rrJunction = new RoundRobinJunction(id,
-        maxTimeSlice, minTimeSlice);
+        minTimeSlice, maxTimeSlice);
     simulator.addSimulatedObject(rrJunction);
   }
 
@@ -58,7 +57,7 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
             "Min time slice must be a positive number");
       }
 
-      return new NewRoundRobinJunctionEvent(time, id, maxTimeSlice, minTimeSlice);
+      return new NewRoundRobinJunctionEvent(time, id, minTimeSlice, maxTimeSlice);
     }
 
   }
