@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MainTest {
 
-  private static final String RES = "src/main/resources/";
+  private static final String RES = "src/test/resources/";
 
   @Test
   void basicTest() throws Exception {
