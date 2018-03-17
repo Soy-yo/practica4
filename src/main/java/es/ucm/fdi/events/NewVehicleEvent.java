@@ -28,33 +28,29 @@ public class NewVehicleEvent extends Event {
     @Override
     public Event parse(IniSection section) {
 
-      if (!section.getTag().equals(SECTION_TAG_NAME)) {
+      if (!section.getTag().equals(SECTION_TAG_NAME) || !matchesType(section)) {
         return null;
       }
 
       int time = parsePositiveInt(section, "time", 0);
 
-      String id = section.getValue("id");
-      if (!isValid(id)) {
-        throw new IllegalArgumentException("id " + id + " is not a valid id");
-      }
+      String id = getId(section);
 
-      int maxSpeed;
-      try {
-        maxSpeed = getIntValue("max_speed", section);
-      } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            "Vehicle max speed must be a positive number");
-      }
+      int maxSpeed = parsePositiveInt(section, "max_speed");
 
-      String[] itinerary = parseIdList(section, "itinerary");
-      if (itinerary == null || itinerary.length < 2) {
-        throw new IllegalArgumentException("Vehicle itinerary list must contain at least " +
-            "2 junctions");
-      }
+      String[] itinerary = parseIdList(section, "itinerary", 2);
 
-      return new NewVehicleEvent(time, id, maxSpeed, itinerary);
+      return parseType(section, time, id, maxSpeed, itinerary);
     }
+    
+    public boolean matchesType(IniSection section) {
+		return section.getValue("type") == null;
+    }
+
+    public NewVehicleEvent parseType(IniSection section, int time, String id, int maxSpeed,
+    		String[] itinerary) {
+        return new NewVehicleEvent(time, id, maxSpeed, itinerary);
+      }
 
   }
 

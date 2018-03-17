@@ -33,40 +33,32 @@ public class NewRoadEvent extends Event {
     @Override
     public Event parse(IniSection section) {
 
-      if (!section.getTag().equals(SECTION_TAG_NAME)) {
+      if (!section.getTag().equals(SECTION_TAG_NAME) || !matchesType(section)) {
         return null;
       }
 
       int time = parsePositiveInt(section, "time", 0);
 
-      String id = section.getValue("id");
-      if (!isValid(id)) {
-        throw new IllegalArgumentException("id " + id + " is not a valid id");
-      }
+      String id = getId(section);
 
-      //TODO: trycatch(?) (mirar tambien en las subclases) Edu
-      String src = section.getValue("src");
-      String dest = section.getValue("dest");
+      String src = parseString(section, "src");
+      
+      String dest = parseString(section, "dest");
 
-      int maxSpeed;
-      try {
-        maxSpeed = getIntValue("max_speed", section);
-      } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            "Road max speed must be a positive number");
-      }
+      int maxSpeed = parsePositiveInt(section, "max_speed");
 
-      int length;
-      try {
-        length = Integer.parseInt(section.getValue("length"));
-        if (length <= 0) {
-          throw new IllegalArgumentException("Road length must be positive");
-        }
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Road length must be a number", e);
-      }
+      int length = parsePositiveInt(section, "length");
+       
+      return parseType(section, time, id, src, dest, maxSpeed, length);
+    }
 
-      return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
+    public boolean matchesType(IniSection section) {
+		return section.getValue("type") == null;
+    }
+
+    public NewRoadEvent parseType(IniSection section, int time, String id, String src,
+    		String dest, int maxSpeed, int length) {
+        return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
     }
 
   }
