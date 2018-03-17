@@ -1,6 +1,7 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
+import es.ucm.fdi.model.LaneRoad;
 import es.ucm.fdi.model.RoundRobinJunction;
 import es.ucm.fdi.model.TrafficSimulator;
 
@@ -22,44 +23,18 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
     simulator.addSimulatedObject(rrJunction);
   }
 
-  static class Builder implements Event.Builder {
-
-    @Override
-    public Event parse(IniSection section) {
-
-      if (!section.getTag().equals(SECTION_TAG_NAME)
-          || !RoundRobinJunction.TYPE
-          .equals(section.getValue("type"))) {
-        return null;
-      }
-
-      int time = parsePositiveInt(section, "time", 0);
-
-      String id = section.getValue("id");
-      if (!isValid(id)) {
-        throw new IllegalArgumentException("id " + id
-            + " is not a valid id");
-      }
-
-      int maxTimeSlice;
-      try {
-        maxTimeSlice = getIntValue("max_time_slice", section);
-      } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            "Max time slice must be a positive number");
-      }
-
-      int minTimeSlice;
-      try {
-        minTimeSlice = getIntValue("min_time_slice", section);
-      } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(
-            "Min time slice must be a positive number");
-      }
-
-      return new NewRoundRobinJunctionEvent(time, id, minTimeSlice, maxTimeSlice);
+  static class Builder extends NewJunctionEvent.Builder {
+	  
+	@Override
+    public boolean matchesType(IniSection section) {
+		return RoundRobinJunction.TYPE.equals(section.getValue("type"));
     }
 
+	  @Override
+	  public NewJunctionEvent parseType(IniSection section, int time, String id) {
+	      int maxTimeSlice = parsePositiveInt(section, "max_time_slice");
+	      int minTimeSlice = parsePositiveInt(section, "min_time_slice");
+	      return new NewRoundRobinJunctionEvent(time, id, minTimeSlice, maxTimeSlice);
+	  }
   }
-
 }

@@ -23,19 +23,24 @@ public class NewJunctionEvent extends Event {
     @Override
     public Event parse(IniSection section) {
 
-      if (!section.getTag().equals(SECTION_TAG_NAME)) {
+      if (!section.getTag().equals(SECTION_TAG_NAME) || !matchesType(section)) {
         return null;
       }
 
       int time = parsePositiveInt(section, "time", 0);
 
-      String id = section.getValue("id");
-      if (!isValid(id)) {
-        throw new IllegalArgumentException("id " + id + " is not a valid id");
-      }
+      String id = getId(section);
 
-      return new NewJunctionEvent(time, id);
+      return parseType(section, time, id);
     }
+    
+    public boolean matchesType(IniSection section) {
+		return section.getValue("type") == null;
+    }
+    
+    public NewJunctionEvent parseType(IniSection section, int time, String id) {
+        return new NewJunctionEvent(time, id);
+      }
 
   }
 

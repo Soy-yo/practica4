@@ -34,17 +34,9 @@ public class MakeVehicleFaultyEvent extends Event {
 
       int time = parsePositiveInt(section, "time", 0);
 
-      String[] vehicles = parseIdList(section, "vehicles");
+      String[] vehicles = parseIdList(section, "vehicles", 1);
 
-      int duration;
-      try {
-        duration = Integer.parseInt(section.getValue("duration"));
-        if (duration <= 0) {
-          throw new IllegalArgumentException("Vehicle's faulty duration must be positive");
-        }
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Vehicle faulty duration must be a number", e);
-      }
+      int duration = parsePositiveInt(section, "duration");
 
       return new MakeVehicleFaultyEvent(time, "", vehicles, duration);
     }
