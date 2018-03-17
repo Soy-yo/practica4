@@ -109,7 +109,7 @@ public class Main {
    *
    * @throws IOException
    */
-  private static void test(String path) throws IOException {
+  static void test(String path) throws IOException {
 
     File dir = new File(path);
 
@@ -119,15 +119,21 @@ public class Main {
 
     File[] files = dir.listFiles((d, name) -> name.endsWith(".ini"));
 
+    boolean everythingOk = true;
+
     for (File file : files) {
-      test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
-          file.getAbsolutePath() + ".eout", 10);
+      everythingOk = test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
+          file.getAbsolutePath() + ".eout", 10) && everythingOk;
+    }
+
+    if (!everythingOk) {
+      throw new SimulatorError("Some tests failed");
     }
 
   }
 
-  private static void test(String inFile, String outFile,
-                           String expectedOutFile, int timeLimit) throws IOException {
+  private static boolean test(String inFile, String outFile,
+                              String expectedOutFile, int timeLimit) throws IOException {
     outfile = outFile;
     infile = inFile;
     Main.timeLimit = timeLimit;
@@ -139,6 +145,7 @@ public class Main {
         + "' : "
         + (equalOutput ? "OK!" : ("not equal to expected output +'"
         + expectedOutFile + "'")));
+    return equalOutput;
   }
 
   /**

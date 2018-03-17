@@ -33,7 +33,7 @@ public class Car extends Vehicle {
 
   @Override
   public void advance() {
-    if (faulty == 0 && kilometrage - lastTimeFaulty >= resistance &&
+    if (faulty == 0 && kilometrage - lastTimeFaulty > resistance &&
         randomNumber.nextDouble() < faultyProbability) {
       setFaulty(randomNumber.nextInt(maxFaultDuration) + 1);
     }
