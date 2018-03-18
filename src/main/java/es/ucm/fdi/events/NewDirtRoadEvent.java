@@ -14,9 +14,7 @@ public class NewDirtRoadEvent extends NewRoadEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    DirtRoad dirtRoad = new DirtRoad(id, length, maxSpeed, sourceId,
-        destinationId);
-    simulator.addSimulatedObject(dirtRoad);
+    simulator.addSimulatedObject(new DirtRoad(id, length, maxSpeed, sourceId, destinationId));
   }
 
   static class Builder extends NewRoadEvent.Builder {

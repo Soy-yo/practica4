@@ -122,8 +122,12 @@ public class Main {
     boolean everythingOk = true;
 
     for (File file : files) {
-      everythingOk = test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
-          file.getAbsolutePath() + ".eout", 10) && everythingOk;
+      try {
+        everythingOk = test(file.getAbsolutePath(), file.getAbsolutePath() + ".out",
+            file.getAbsolutePath() + ".eout", 10) && everythingOk;
+      } catch (IOException e) {
+        System.out.println("Couldn't find .eout or .out file for " + file.getAbsolutePath());
+      }
     }
 
     if (!everythingOk) {
@@ -150,25 +154,31 @@ public class Main {
 
   /**
    * Run the simulator in batch mode
-   *
-   * @throws IOException
    */
-  private static void startBatchMode() throws IOException {
-    TrafficSimulator ts = new TrafficSimulator();
-    Controller controller = new Controller(ts);
-    InputStream is = new FileInputStream(infile);
+  private static void startBatchMode() {
+
+    Controller controller = new Controller(new TrafficSimulator());
+
     try {
-      controller.loadEvents(is);
+      controller.loadEvents(new FileInputStream(infile));
     } catch (IllegalStateException e) {
       printErrors(e);
+    } catch (IOException e) {
+      System.out.println("Something went wrong with input file (" + infile + ")");
     }
-    OutputStream os = outfile == null ? System.out : new FileOutputStream(outfile);
-    controller.setOutputStream(os);
+
+    try {
+      controller.setOutputStream(outfile == null ? System.out : new FileOutputStream(outfile));
+    } catch (IOException e) {
+      System.out.println("Something went wrong with output file (" + outfile + ")");
+    }
+
     try {
       controller.run(timeLimit);
     } catch (SimulatorError e) {
       printErrors(e);
     }
+
   }
 
   private static void printErrors(Exception e) {
@@ -181,12 +191,12 @@ public class Main {
     }
   }
 
-  private static void start(String[] args) throws IOException {
+  private static void start(String[] args) {
     parseArgs(args);
     startBatchMode();
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     // example command lines:
     //

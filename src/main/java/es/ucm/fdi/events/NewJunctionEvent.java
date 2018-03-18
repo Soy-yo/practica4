@@ -14,8 +14,7 @@ public class NewJunctionEvent extends Event {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    Junction junction = new Junction(id);
-    simulator.addSimulatedObject(junction);
+    simulator.addSimulatedObject(new Junction(id));
   }
 
   static class Builder implements Event.Builder {

@@ -16,9 +16,8 @@ public class NewLaneRoadEvent extends NewRoadEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    LaneRoad laneRoad = new LaneRoad(id, length, maxSpeed, sourceId,
-        destinationId, lanes);
-    simulator.addSimulatedObject(laneRoad);
+    simulator.addSimulatedObject(new LaneRoad(id, length, maxSpeed, sourceId, destinationId,
+        lanes));
   }
 
   static class Builder extends NewRoadEvent.Builder {

@@ -32,7 +32,7 @@ public class Controller {
     }
   }
 
-  public void loadEvents(InputStream is) throws IOException {
+  public void loadEvents(InputStream is) {
     try {
       Ini ini = new Ini(is);
       for (IniSection section : ini.getSections()) {
@@ -48,7 +48,7 @@ public class Controller {
         }
       }
     } catch (IOException e) {
-      throw new IOException("Something went wrong while reading ini file", e);
+      throw new IllegalStateException("Something went wrong while reading ini file", e);
     }
   }
 
