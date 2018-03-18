@@ -25,7 +25,7 @@ public abstract class SimulatedObject {
     Map<String, String> kvps = new LinkedHashMap<>();
     kvps.put("", getReportHeader());
     kvps.put("id", id);
-    kvps.put("time", String.valueOf(time));
+    kvps.put("time", "" + time);
     fillReportDetails(kvps);
     return kvps;
   }

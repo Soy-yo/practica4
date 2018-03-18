@@ -29,6 +29,9 @@ public class MostCrowdedJunction extends JunctionWithTimeSlice {
     IncomingRoad road = (IncomingRoad) getNextRoad();
     IncomingRoad mostCrowded = road;
     if (currentRoadOn == null) {
+      // Si todos los semáforos están en rojo hay que buscar el que más coches tenga
+      // así que suponemos que la que estaba en verde era la primera y que es la que vamos a
+      // escoger si ninguna tiene más coches
       currentRoadOn = road;
       road = (IncomingRoad) getNextRoad();
     }
@@ -39,7 +42,7 @@ public class MostCrowdedJunction extends JunctionWithTimeSlice {
       road = (IncomingRoad) getNextRoad();
     }
     currentRoadOn = mostCrowded;
-    // apuntar a la siguiente carretera
+    // Apunta a la siguiente carretera de nuevo
     while (road != currentRoadOn) {
       road = (IncomingRoad) getNextRoad();
     }

@@ -98,7 +98,7 @@ public class Vehicle extends SimulatedObject {
     kvps.put("speed", "" + currentSpeed);
     kvps.put("kilometrage", "" + kilometrage);
     kvps.put("faulty", "" + faulty);
-    kvps.put("location", hasArrived ? "arrived" : "(" + road.id + "," + location + ")");
+    kvps.put("location", hasArrived ? "arrived" : "(" + road + "," + location + ")");
   }
 
   @Override

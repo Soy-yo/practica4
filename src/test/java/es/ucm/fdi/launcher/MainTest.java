@@ -1,9 +1,6 @@
 package es.ucm.fdi.launcher;
 
-import es.ucm.fdi.excepcions.SimulatorError;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MainTest {
 
@@ -20,8 +17,8 @@ class MainTest {
   }
 
   @Test
-  void errTest() {
-    assertThrows(SimulatorError.class, () -> Main.test(RES + "examples/basic"));
+  void errTest() throws Exception {
+    Main.test(RES + "examples/err");
   }
 
 }
