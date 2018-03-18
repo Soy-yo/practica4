@@ -6,8 +6,8 @@ public class Junction extends SimulatedObject {
 
   private static String SECTION_TAG_NAME = "junction_report";
   protected Map<Road, IncomingRoad> incomingRoads;
-  protected IncomingRoad currentRoadOn;
-  protected Iterator<IncomingRoad> nextRoad;
+  protected IncomingRoad currentRoadOn; // carretera con semáforo en verde actualmente
+  protected Iterator<IncomingRoad> nextRoad; // siguiente carretera a la del semáforo en verde
 
   public Junction(String id) {
     super(id);
@@ -42,12 +42,14 @@ public class Junction extends SimulatedObject {
   }
 
   protected IncomingRoad getNextRoad() {
+    // Reinicia el iterador cada vuelta
     if (nextRoad == null || !nextRoad.hasNext()) {
       nextRoad = incomingRoads.values().iterator();
     }
     return nextRoad.next();
   }
 
+  // Devuelve la carretera que une el cruce con id previousJunction con esta (si existe)
   public Road getStraightRoad(String previousJunction) {
     for (Road r : incomingRoads.keySet()) {
       if (r.getSource().equals(previousJunction)) {
@@ -62,7 +64,9 @@ public class Junction extends SimulatedObject {
     if (!incomingRoads.isEmpty()) {
       StringBuilder stringBuilder = new StringBuilder();
       for (Map.Entry<Road, IncomingRoad> e : incomingRoads.entrySet()) {
+        // Para cada carretera entrante
         stringBuilder.append("(" + e.getKey() + "," + e.getValue().lightColor() + ",[");
+        // Rellena los vehículos en la cola
         for (Vehicle v : e.getValue().vehicles()) {
           stringBuilder.append(v + ",");
         }

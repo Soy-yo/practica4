@@ -24,7 +24,7 @@ public class Controller {
     outputStream = os;
   }
 
-  public void run(int ticks) throws SimulatorError {
+  public void run(int ticks) {
     try {
       simulator.execute(ticks, outputStream);
     } catch (SimulatorError e) {

@@ -23,6 +23,9 @@ public class RoadMap {
   }
 
   public void addSimulatedObject(SimulatedObject o) {
+    if (contains(o.getId())) {
+      throw new IllegalArgumentException("Object " + o.getId() + " is already registered");
+    }
     if (o instanceof Vehicle) {
       addVehicle((Vehicle) o);
     } else if (o instanceof Road) {
@@ -32,11 +35,9 @@ public class RoadMap {
     }
   }
 
-  public void addVehicle(Vehicle v) throws IllegalArgumentException {
-    if (contains(v.getId())) {
-      throw new IllegalArgumentException("This vehicle is already registered");
-    }
+  public void addVehicle(Vehicle v) {
     List<Junction> itinerary = v.getItinerary();
+    // Comprueba que el itinerario del vehículo es posible
     for (Junction j : itinerary) {
       if (!junctions.containsKey(j.getId())) {
         throw new IllegalArgumentException("Junction " + j + " in vehicle's " + v
@@ -47,11 +48,9 @@ public class RoadMap {
     vehicles.put(v.getId(), v);
   }
 
-  public void addRoad(Road r) throws IllegalArgumentException {
-    if (contains(r.getId())) {
-      throw new IllegalArgumentException("This road is already registered");
-    }
+  public void addRoad(Road r) {
     Junction destination = junctionSearch(r.getDestiny());
+    // Comprueba que tanto el origen como el destino existen en el mapa
     if (!junctions.containsKey(r.getSource())) {
       throw new IllegalArgumentException("Couldn't find source for road " + r.getId());
     }
@@ -62,10 +61,7 @@ public class RoadMap {
     roads.put(r.getId(), r);
   }
 
-  public void addJunction(Junction j) throws IllegalArgumentException {
-    if (contains(j.getId())) {
-      throw new IllegalArgumentException("This junction is already registered");
-    }
+  public void addJunction(Junction j) {
     junctions.put(j.getId(), j);
   }
 
@@ -106,6 +102,8 @@ public class RoadMap {
     return Collections.unmodifiableList(new ArrayList<>(junctions.values()));
   }
 
+  // Devuelve una cola de cruces a partir de sus ids si todos existen y hay alguna carretera que
+  // los une
   public Queue<Junction> getPath(String[] path) {
     Queue<Junction> result = new ArrayDeque<>();
     String previousJunctionId = null;

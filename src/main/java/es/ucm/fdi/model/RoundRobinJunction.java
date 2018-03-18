@@ -21,8 +21,10 @@ public class RoundRobinJunction extends JunctionWithTimeSlice {
       super.switchLights();
     } else if (timeUnits == timeLapse - 1) {
       if (timesUsed == 0) {
+        // Ningún coche ha pasado esta vez
         timeLapse = Math.max(timeLapse - 1, minTimeSlice);
       } else if (timesUsed == timeUnits) {
+        // Ha pasado algún coche cada tick
         timeLapse = Math.min(timeLapse + 1, maxTimeSlice);
       }
       super.switchLights();

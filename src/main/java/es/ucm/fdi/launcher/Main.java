@@ -160,22 +160,24 @@ public class Main {
     try {
       controller.loadEvents(is);
     } catch (IllegalStateException e) {
-      Throwable cause = e;
-      while (cause != null) {
-        System.out.println(cause.getMessage());
-        cause = cause.getCause();
-      }
+      printErrors(e);
     }
     OutputStream os = outfile == null ? System.out : new FileOutputStream(outfile);
     controller.setOutputStream(os);
     try {
       controller.run(timeLimit);
     } catch (SimulatorError e) {
-      Throwable cause = e;
-      while (cause != null) {
-        System.out.println(cause.getMessage());
-        cause = cause.getCause();
-      }
+      printErrors(e);
+    }
+  }
+
+  private static void printErrors(Exception e) {
+    Throwable cause = e;
+    String indent = "";
+    while (cause != null) {
+      System.out.println(indent + cause.getMessage());
+      indent += "\t";
+      cause = cause.getCause();
     }
   }
 

@@ -25,7 +25,7 @@ public abstract class Event {
 
   @Override
   public String toString() {
-    return getClass() + ": " + id;
+    return getClass().getSimpleName() + " " + id;
   }
 
   public interface Builder {
