@@ -160,20 +160,20 @@ public class Main {
     Controller controller = new Controller(new TrafficSimulator());
 
     try {
-      controller.loadEvents(new FileInputStream(infile));
-    } catch (IllegalStateException e) {
-      printErrors(e);
-    } catch (IOException e) {
-      System.out.println("Something went wrong with input file (" + infile + ")");
-    }
+      try {
+        controller.loadEvents(new FileInputStream(infile));
+      } catch (IllegalStateException e) {
+        throw new SimulatorError("Load failed", e);
+      } catch (IOException e) {
+        System.out.println("Something went wrong with input file (" + infile + ")");
+      }
 
-    try {
-      controller.setOutputStream(outfile == null ? System.out : new FileOutputStream(outfile));
-    } catch (IOException e) {
-      System.out.println("Something went wrong with output file (" + outfile + ")");
-    }
+      try {
+        controller.setOutputStream(outfile == null ? System.out : new FileOutputStream(outfile));
+      } catch (IOException e) {
+        System.out.println("Something went wrong with output file (" + outfile + ")");
+      }
 
-    try {
       controller.run(timeLimit);
     } catch (SimulatorError e) {
       printErrors(e);
