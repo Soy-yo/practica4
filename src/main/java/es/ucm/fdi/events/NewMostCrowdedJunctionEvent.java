@@ -1,7 +1,6 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.LaneRoad;
 import es.ucm.fdi.model.MostCrowdedJunction;
 import es.ucm.fdi.model.TrafficSimulator;
 
@@ -19,15 +18,15 @@ public class NewMostCrowdedJunctionEvent extends NewJunctionEvent {
 
   static class Builder extends NewJunctionEvent.Builder {
 
-	@Override
+    @Override
     public boolean matchesType(IniSection section) {
-		return MostCrowdedJunction.TYPE.equals(section.getValue("type"));
+      return MostCrowdedJunction.TYPE.equals(section.getValue("type"));
     }
-	  
-	  @Override
-	  public NewJunctionEvent parseType(IniSection section, int time, String id) {
-	       return new NewMostCrowdedJunctionEvent(time, id);
-	  }
+
+    @Override
+    public NewJunctionEvent parseType(IniSection section, int time, String id) {
+      return new NewMostCrowdedJunctionEvent(time, id);
+    }
 
   }
 

@@ -158,23 +158,23 @@ public class Main {
     Controller controller = new Controller(ts);
     InputStream is = new FileInputStream(infile);
     try {
-    controller.loadEvents(is);
+      controller.loadEvents(is);
     } catch (IllegalStateException e) {
-    	Throwable cause = e;
-        while (cause != null) {
-      	  System.out.println(cause.getMessage());
-      	  cause = cause.getCause();
-        }
+      Throwable cause = e;
+      while (cause != null) {
+        System.out.println(cause.getMessage());
+        cause = cause.getCause();
+      }
     }
     OutputStream os = outfile == null ? System.out : new FileOutputStream(outfile);
     controller.setOutputStream(os);
     try {
       controller.run(timeLimit);
     } catch (SimulatorError e) {
-    	Throwable cause = e;
+      Throwable cause = e;
       while (cause != null) {
-    	  System.out.println(cause.getMessage());
-    	  cause = cause.getCause();
+        System.out.println(cause.getMessage());
+        cause = cause.getCause();
       }
     }
   }
@@ -198,10 +198,10 @@ public class Main {
     // Call test in order to test the simulator on all examples in a
     // directory.
     //
-    test("src/test/resources/examples/err");
+    //test("src/test/resources/examples/err");
 
     // Call start to start the simulator from command line, etc.
-    //start(args);
+    start(args);
 
   }
 

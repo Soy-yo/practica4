@@ -1,6 +1,6 @@
 package es.ucm.fdi.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayDeque;
 import java.util.LinkedHashMap;
@@ -9,10 +9,10 @@ import java.util.Queue;
 
 import static org.junit.Assert.assertEquals;
 
-public class RoadTest {
+class RoadTest {
 
   @Test
-  public void simpleMoving() {
+  void simpleMoving() {
     Junction source = new Junction("jt1");
     Junction dest = new Junction("jt2");
     Queue<Junction> queue = new ArrayDeque<>();
@@ -41,7 +41,7 @@ public class RoadTest {
   }
 
   @Test
-  public void faultyVehicle() {
+  void faultyVehicle() {
     Junction source = new Junction("jt1");
     Junction dest = new Junction("jt2");
     Queue<Junction> queue = new ArrayDeque<>();
@@ -75,7 +75,7 @@ public class RoadTest {
   }
 
   @Test
-  public void dirtTest() {
+  void dirtTest() {
     Junction source = new Junction("jt1");
     Junction dest = new Junction("jt2");
     Queue<Junction> queue = new ArrayDeque<>();
@@ -131,7 +131,7 @@ public class RoadTest {
   }
 
   @Test
-  public void laneTest() {
+  void laneTest() {
     Junction source = new Junction("jt1");
     Junction dest = new Junction("jt2");
     Queue<Junction> queue = new ArrayDeque<>();

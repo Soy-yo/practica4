@@ -1,7 +1,6 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.Bicycle;
 import es.ucm.fdi.model.DirtRoad;
 import es.ucm.fdi.model.TrafficSimulator;
 
@@ -23,16 +22,16 @@ public class NewDirtRoadEvent extends NewRoadEvent {
   static class Builder extends NewRoadEvent.Builder {
 
 
-	@Override
+    @Override
     public boolean matchesType(IniSection section) {
-		return DirtRoad.TYPE.equals(section.getValue("type"));
+      return DirtRoad.TYPE.equals(section.getValue("type"));
     }
-	  
-	  @Override
-	  public NewRoadEvent parseType(IniSection section, int time, String id, String src,
-	    		String dest, int maxSpeed, int length) {
-		  return new NewDirtRoadEvent(time, id, src, dest, maxSpeed, length);
-	  }
+
+    @Override
+    public NewRoadEvent parseType(IniSection section, int time, String id, String src,
+                                  String dest, int maxSpeed, int length) {
+      return new NewDirtRoadEvent(time, id, src, dest, maxSpeed, length);
+    }
 
   }
 

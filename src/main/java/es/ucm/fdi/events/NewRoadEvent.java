@@ -42,23 +42,19 @@ public class NewRoadEvent extends Event {
       String id = getId(section);
 
       String src = parseString(section, "src");
-      
+
       String dest = parseString(section, "dest");
 
       int maxSpeed = parsePositiveInt(section, "max_speed");
 
       int length = parsePositiveInt(section, "length");
-       
+
       return parseType(section, time, id, src, dest, maxSpeed, length);
     }
 
-    public boolean matchesType(IniSection section) {
-		return section.getValue("type") == null;
-    }
-
     public NewRoadEvent parseType(IniSection section, int time, String id, String src,
-    		String dest, int maxSpeed, int length) {
-        return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
+                                  String dest, int maxSpeed, int length) {
+      return new NewRoadEvent(time, id, src, dest, maxSpeed, length);
     }
 
   }

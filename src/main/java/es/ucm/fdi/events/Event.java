@@ -31,7 +31,11 @@ public abstract class Event {
   public interface Builder {
 
     Event parse(IniSection section);
-    
+
+    default boolean matchesType(IniSection section) {
+      return section.getValue("type") == null;
+    }
+
     default boolean isValid(String id) {
       return id.matches("[a-zA-Z1-9_]++");
     }
@@ -46,34 +50,34 @@ public abstract class Event {
       }
       return defaultValue;
     }
-    
+
     default long parsePositiveLong(IniSection section, String key, long defaultValue) {
-        try {
-          long result = Long.parseLong(parseString(section, key));
-          if (result > 0) {
-            return result;
-          }
-        } catch (Exception e) {
+      try {
+        long result = Long.parseLong(parseString(section, key));
+        if (result > 0) {
+          return result;
         }
-        return defaultValue;
+      } catch (Exception e) {
       }
+      return defaultValue;
+    }
 
     default String[] parseIdList(IniSection section, String key, int minElements) {
       String values = parseString(section, key);
       String[] result = values.split("[, ]+");
       if (result.length < minElements) {
-    	  throw new IllegalArgumentException("The id list for " + key + " must contain at list " 
-    			  + minElements + " elements");
+        throw new IllegalArgumentException("The id list for " + key + " must contain at list "
+            + minElements + " elements");
       }
       return result;
     }
-    
+
     default String parseString(IniSection section, String key) {
-    	String result = section.getValue(key);
-    	if (result == null) {
-    		throw new IllegalArgumentException("missing " + key);
-    	}
-    	return result;
+      String result = section.getValue(key);
+      if (result == null) {
+        throw new IllegalArgumentException("missing " + key);
+      }
+      return result;
     }
 
     default int parsePositiveInt(IniSection section, String key) {
@@ -88,26 +92,26 @@ public abstract class Event {
       }
       return result;
     }
-    
+
     default double parsePositiveDouble(IniSection section, String key, double maxValue) {
-    	double result;
-    	try {
-    		result = Double.parseDouble(parseString(section, key));
-            if (result < 0 || result > maxValue) {
-              throw new IllegalArgumentException(key + " has to be between 0 and " + maxValue);
-            }
-          } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(key + " must be a number");
-          }
-    	return result;
-    }
-    
-    default String getId(IniSection section) {
-    	String id = parseString(section, "id");
-        if (!isValid(id)) {
-          throw new IllegalArgumentException("id " + id + " is not a valid id");
+      double result;
+      try {
+        result = Double.parseDouble(parseString(section, key));
+        if (result < 0 || result > maxValue) {
+          throw new IllegalArgumentException(key + " has to be between 0 and " + maxValue);
         }
-    	return id;
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException(key + " must be a number");
+      }
+      return result;
+    }
+
+    default String getId(IniSection section) {
+      String id = parseString(section, "id");
+      if (!isValid(id)) {
+        throw new IllegalArgumentException("id " + id + " is not a valid id");
+      }
+      return id;
     }
 
   }

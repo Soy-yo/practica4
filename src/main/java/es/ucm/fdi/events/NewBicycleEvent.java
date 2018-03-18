@@ -5,7 +5,7 @@ import es.ucm.fdi.model.Bicycle;
 import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewBicycleEvent extends NewVehicleEvent {
-	
+
   NewBicycleEvent(int time, String id, int maxSpeed, String[] itinerary) {
     super(time, id, maxSpeed, itinerary);
   }
@@ -18,16 +18,16 @@ public class NewBicycleEvent extends NewVehicleEvent {
 
   static class Builder extends NewVehicleEvent.Builder {
 
-	@Override
+    @Override
     public boolean matchesType(IniSection section) {
-		return Bicycle.TYPE.equals(section.getValue("type"));
+      return Bicycle.TYPE.equals(section.getValue("type"));
     }
-	  
-	  @Override
-	  public NewVehicleEvent parseType(IniSection section, int time, String id, int maxSpeed,
-	    		String[] itinerary) {
-	       return new NewBicycleEvent(time, id, maxSpeed, itinerary);
-	  }
+
+    @Override
+    public NewVehicleEvent parseType(IniSection section, int time, String id, int maxSpeed,
+                                     String[] itinerary) {
+      return new NewBicycleEvent(time, id, maxSpeed, itinerary);
+    }
 
   }
 

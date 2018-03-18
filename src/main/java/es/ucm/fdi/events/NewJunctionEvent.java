@@ -33,14 +33,10 @@ public class NewJunctionEvent extends Event {
 
       return parseType(section, time, id);
     }
-    
-    public boolean matchesType(IniSection section) {
-		return section.getValue("type") == null;
-    }
-    
+
     public NewJunctionEvent parseType(IniSection section, int time, String id) {
-        return new NewJunctionEvent(time, id);
-      }
+      return new NewJunctionEvent(time, id);
+    }
 
   }
 

@@ -1,12 +1,11 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.Bicycle;
 import es.ucm.fdi.model.LaneRoad;
 import es.ucm.fdi.model.TrafficSimulator;
 
 public class NewLaneRoadEvent extends NewRoadEvent {
-	
+
   private int lanes;
 
   NewLaneRoadEvent(int time, String id, String sourceId,
@@ -21,20 +20,20 @@ public class NewLaneRoadEvent extends NewRoadEvent {
         destinationId, lanes);
     simulator.addSimulatedObject(laneRoad);
   }
-    
+
   static class Builder extends NewRoadEvent.Builder {
 
-	@Override
+    @Override
     public boolean matchesType(IniSection section) {
-		return LaneRoad.TYPE.equals(section.getValue("type"));
+      return LaneRoad.TYPE.equals(section.getValue("type"));
     }
-		
-  	@Override
-  	public NewRoadEvent parseType(IniSection section, int time, String id, String src,
-  	    		String dest, int maxSpeed, int length) {
-  	    int lanes = parsePositiveInt(section, "lanes");
-  		return new NewLaneRoadEvent(time, id, src, dest, maxSpeed, length, lanes);
-  	}
+
+    @Override
+    public NewRoadEvent parseType(IniSection section, int time, String id, String src,
+                                  String dest, int maxSpeed, int length) {
+      int lanes = parsePositiveInt(section, "lanes");
+      return new NewLaneRoadEvent(time, id, src, dest, maxSpeed, length, lanes);
+    }
 
   }
 

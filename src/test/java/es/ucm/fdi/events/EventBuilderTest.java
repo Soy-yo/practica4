@@ -66,7 +66,7 @@ class EventBuilderTest {
     section.setValue("itinerary", "j1,j2");
     section.setValue("max_speed", "20000");
     section.setValue("type", "spaceship");
-    assertThrows(IllegalStateException.class, () -> EventBuilder.parse(section));
+    assertNull(EventBuilder.parse(section));
   }
 
   @Test

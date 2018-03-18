@@ -42,15 +42,11 @@ public class NewVehicleEvent extends Event {
 
       return parseType(section, time, id, maxSpeed, itinerary);
     }
-    
-    public boolean matchesType(IniSection section) {
-		return section.getValue("type") == null;
-    }
 
     public NewVehicleEvent parseType(IniSection section, int time, String id, int maxSpeed,
-    		String[] itinerary) {
-        return new NewVehicleEvent(time, id, maxSpeed, itinerary);
-      }
+                                     String[] itinerary) {
+      return new NewVehicleEvent(time, id, maxSpeed, itinerary);
+    }
 
   }
 

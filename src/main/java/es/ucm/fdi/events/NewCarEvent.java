@@ -1,7 +1,6 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.Bicycle;
 import es.ucm.fdi.model.Car;
 import es.ucm.fdi.model.TrafficSimulator;
 
@@ -31,25 +30,27 @@ public class NewCarEvent extends NewVehicleEvent {
 
   static class Builder extends NewVehicleEvent.Builder {
 
-	@Override
+    @Override
     public boolean matchesType(IniSection section) {
-		return Car.TYPE.equals(section.getValue("type"));
+      return Car.TYPE.equals(section.getValue("type"));
     }
-		
+
     @Override
     public NewVehicleEvent parseType(IniSection section, int time, String id, int maxSpeed,
-    		String[] itinerary) {
-    	
-        int resistance = parsePositiveInt(section, "resistance");
+                                     String[] itinerary) {
 
-        double faultProbability = parsePositiveDouble(section, "fault_probability", 1.0);
+      int resistance = parsePositiveInt(section, "resistance");
 
-        int maxFaultDuration = parsePositiveInt(section, "max_fault_duration");
+      double faultProbability = parsePositiveDouble(section, "fault_probability", 1.0);
 
-        long seed = parsePositiveLong(section, "seed", System.currentTimeMillis());
-        
-        return new NewCarEvent(time, id, maxSpeed, itinerary, resistance,
-            faultProbability, maxFaultDuration, seed);
+      int maxFaultDuration = parsePositiveInt(section, "max_fault_duration");
+
+      long seed = parsePositiveLong(section, "seed", System.currentTimeMillis());
+
+      return new NewCarEvent(time, id, maxSpeed, itinerary, resistance,
+          faultProbability, maxFaultDuration, seed);
     }
+
   }
+
 }

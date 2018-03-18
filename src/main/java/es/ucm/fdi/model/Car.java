@@ -45,4 +45,5 @@ public class Car extends Vehicle {
     kvps.put("type", TYPE);
     super.fillReportDetails(kvps);
   }
+
 }

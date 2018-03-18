@@ -1,7 +1,6 @@
 package es.ucm.fdi.events;
 
 import es.ucm.fdi.ini.IniSection;
-import es.ucm.fdi.model.LaneRoad;
 import es.ucm.fdi.model.RoundRobinJunction;
 import es.ucm.fdi.model.TrafficSimulator;
 
@@ -24,17 +23,19 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
   }
 
   static class Builder extends NewJunctionEvent.Builder {
-	  
-	@Override
+
+    @Override
     public boolean matchesType(IniSection section) {
-		return RoundRobinJunction.TYPE.equals(section.getValue("type"));
+      return RoundRobinJunction.TYPE.equals(section.getValue("type"));
     }
 
-	  @Override
-	  public NewJunctionEvent parseType(IniSection section, int time, String id) {
-	      int maxTimeSlice = parsePositiveInt(section, "max_time_slice");
-	      int minTimeSlice = parsePositiveInt(section, "min_time_slice");
-	      return new NewRoundRobinJunctionEvent(time, id, minTimeSlice, maxTimeSlice);
-	  }
+    @Override
+    public NewJunctionEvent parseType(IniSection section, int time, String id) {
+      int maxTimeSlice = parsePositiveInt(section, "max_time_slice");
+      int minTimeSlice = parsePositiveInt(section, "min_time_slice");
+      return new NewRoundRobinJunctionEvent(time, id, minTimeSlice, maxTimeSlice);
+    }
+
   }
+  
 }
