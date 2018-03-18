@@ -23,9 +23,8 @@ public class NewCarEvent extends NewVehicleEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    Car car = new Car(id, maxSpeed, simulator.getPath(itinerary),
-        resistance, faultProbability, maxFaultDuration, seed);
-    simulator.addSimulatedObject(car);
+    simulator.addSimulatedObject(new Car(id, maxSpeed, simulator.getPath(itinerary),
+        resistance, faultProbability, maxFaultDuration, seed));
   }
 
   static class Builder extends NewVehicleEvent.Builder {

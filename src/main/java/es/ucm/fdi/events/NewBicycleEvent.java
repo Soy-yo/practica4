@@ -12,8 +12,7 @@ public class NewBicycleEvent extends NewVehicleEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    Bicycle bicycle = new Bicycle(id, maxSpeed, simulator.getPath(itinerary));
-    simulator.addSimulatedObject(bicycle);
+    simulator.addSimulatedObject(new Bicycle(id, maxSpeed, simulator.getPath(itinerary)));
   }
 
   static class Builder extends NewVehicleEvent.Builder {

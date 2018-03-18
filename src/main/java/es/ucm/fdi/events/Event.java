@@ -32,6 +32,7 @@ public abstract class Event {
 
     Event parse(IniSection section);
 
+    // Comprueba que el tipo especificado sea el mismo que la subclase de Event concreta
     default boolean matchesType(IniSection section) {
       return section.getValue("type") == null;
     }
@@ -40,6 +41,17 @@ public abstract class Event {
       return id.matches("[a-zA-Z1-9_]++");
     }
 
+    // Lee una cadena de texto o lanza un error si no existe tal clave en la sección
+    default String parseString(IniSection section, String key) {
+      String result = section.getValue(key);
+      if (result == null) {
+        throw new IllegalArgumentException("Missing " + key);
+      }
+      return result;
+    }
+
+    // Lee un entero del ini y devuelve dicho entero o un valor por defecto si no es un número o
+    // es negativo
     default int parsePositiveInt(IniSection section, String key, int defaultValue) {
       try {
         int result = Integer.parseInt(parseString(section, key));
@@ -49,35 +61,6 @@ public abstract class Event {
       } catch (Exception e) {
       }
       return defaultValue;
-    }
-
-    default long parsePositiveLong(IniSection section, String key, long defaultValue) {
-      try {
-        long result = Long.parseLong(parseString(section, key));
-        if (result > 0) {
-          return result;
-        }
-      } catch (Exception e) {
-      }
-      return defaultValue;
-    }
-
-    default String[] parseIdList(IniSection section, String key, int minElements) {
-      String values = parseString(section, key);
-      String[] result = values.split("[, ]+");
-      if (result.length < minElements) {
-        throw new IllegalArgumentException("The id list for " + key + " must contain at list "
-            + minElements + " elements");
-      }
-      return result;
-    }
-
-    default String parseString(IniSection section, String key) {
-      String result = section.getValue(key);
-      if (result == null) {
-        throw new IllegalArgumentException("missing " + key);
-      }
-      return result;
     }
 
     default int parsePositiveInt(IniSection section, String key) {
@@ -93,6 +76,17 @@ public abstract class Event {
       return result;
     }
 
+    default long parsePositiveLong(IniSection section, String key, long defaultValue) {
+      try {
+        long result = Long.parseLong(parseString(section, key));
+        if (result > 0) {
+          return result;
+        }
+      } catch (Exception e) {
+      }
+      return defaultValue;
+    }
+
     default double parsePositiveDouble(IniSection section, String key, double maxValue) {
       double result;
       try {
@@ -106,10 +100,21 @@ public abstract class Event {
       return result;
     }
 
+    // Devuelve un array con una lista de ids que estaban separados por comas )al menos minElements)
+    default String[] parseIdList(IniSection section, String key, int minElements) {
+      String values = parseString(section, key);
+      String[] result = values.split("[, ]+");
+      if (result.length < minElements) {
+        throw new IllegalArgumentException("The id list for " + key + " must contain at list "
+            + minElements + " elements");
+      }
+      return result;
+    }
+
     default String getId(IniSection section) {
       String id = parseString(section, "id");
       if (!isValid(id)) {
-        throw new IllegalArgumentException("id " + id + " is not a valid id");
+        throw new IllegalArgumentException("Id \"" + id + "\" is not a valid id");
       }
       return id;
     }

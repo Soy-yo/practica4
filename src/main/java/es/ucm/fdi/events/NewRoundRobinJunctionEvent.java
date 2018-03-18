@@ -17,9 +17,7 @@ public class NewRoundRobinJunctionEvent extends NewJunctionEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    RoundRobinJunction rrJunction = new RoundRobinJunction(id,
-        minTimeSlice, maxTimeSlice);
-    simulator.addSimulatedObject(rrJunction);
+    simulator.addSimulatedObject(new RoundRobinJunction(id, minTimeSlice, maxTimeSlice));
   }
 
   static class Builder extends NewJunctionEvent.Builder {

@@ -12,8 +12,7 @@ public class NewMostCrowdedJunctionEvent extends NewJunctionEvent {
 
   @Override
   public void execute(TrafficSimulator simulator) {
-    MostCrowdedJunction mcJunction = new MostCrowdedJunction(id);
-    simulator.addSimulatedObject(mcJunction);
+    simulator.addSimulatedObject(new MostCrowdedJunction(id));
   }
 
   static class Builder extends NewJunctionEvent.Builder {
